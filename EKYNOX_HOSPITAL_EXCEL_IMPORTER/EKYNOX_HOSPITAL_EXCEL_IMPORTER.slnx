@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Clients/" />
+  <Folder Name="/src/Clients/Desktop/">
+    <Project Path="EKYNOX_HEI.DAPP/EKYNOX_HEI.DAPP.csproj" Id="ca5e81ac-6ec6-4260-8bc3-6eb5462a1d07" />
+  </Folder>
+  <Folder Name="/src/Clients/Web/" />
+  <Folder Name="/src/Core/">
+    <Project Path="EKYNOX_HEI.CORE/EKYNOX_HEI.CORE.csproj" Id="ab3a8ff0-7f8b-4a23-8840-edfd65542e08" />
+  </Folder>
+  <Folder Name="/src/Data/">
+    <Project Path="EKYNOX_HEI.DATA/EKYNOX_HEI.DATA.csproj" Id="276f19c4-eb8d-4b7b-be4c-1aedc46efb6a" />
+  </Folder>
+  <Folder Name="/src/Services/" />
+</Solution>
