@@ -8,7 +8,7 @@ namespace EKYNOX_HEI.DATA.DataModel
     {
         public int LOGICALREF { get; set; }
         public string? CODE { get; set; }
-        public int NAME { get; set; }
+        public string? NAME { get; set; }
         public string? CITY { get; set; }
         public string? TOWN { get; set; }
         public string? DISTRICT { get; set; }

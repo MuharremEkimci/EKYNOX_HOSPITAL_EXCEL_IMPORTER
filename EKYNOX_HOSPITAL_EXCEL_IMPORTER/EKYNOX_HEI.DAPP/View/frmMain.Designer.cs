@@ -48,13 +48,16 @@
             // 
             // ribbon
             // 
+            ribbon.EmptyAreaImageOptions.ImagePadding = new Padding(26, 24, 26, 24);
             ribbon.ExpandCollapseItem.Id = 0;
             ribbon.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbon.ExpandCollapseItem, rgbbTemalar, btnAppExit });
             ribbon.Location = new Point(0, 0);
+            ribbon.Margin = new Padding(3, 2, 3, 2);
             ribbon.MaxItemId = 10;
             ribbon.Name = "ribbon";
+            ribbon.OptionsMenuMinWidth = 283;
             ribbon.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { ribbonPage1, rpProcess });
-            ribbon.Size = new Size(1315, 193);
+            ribbon.Size = new Size(1127, 158);
             ribbon.StatusBar = ribbonStatusBar;
             // 
             // rgbbTemalar
@@ -127,7 +130,7 @@
             // 
             btnInstitutions.Caption = "Kurumlar";
             btnInstitutions.Id = 3;
-            btnInstitutions.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("barButtonItem2.ImageOptions.SvgImage");
+            btnInstitutions.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("btnInstitutions.ImageOptions.SvgImage");
             btnInstitutions.Name = "btnInstitutions";
             btnInstitutions.ItemClick += btnInstitutions_ItemClick;
             // 
@@ -140,22 +143,26 @@
             // 
             // ribbonStatusBar
             // 
-            ribbonStatusBar.Location = new Point(0, 812);
+            ribbonStatusBar.Location = new Point(0, 660);
+            ribbonStatusBar.Margin = new Padding(3, 2, 3, 2);
             ribbonStatusBar.Name = "ribbonStatusBar";
             ribbonStatusBar.Ribbon = ribbon;
-            ribbonStatusBar.Size = new Size(1315, 30);
+            ribbonStatusBar.Size = new Size(1127, 24);
             // 
             // frmMain
             // 
-            AutoScaleDimensions = new SizeF(7F, 16F);
+            AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1315, 842);
+            ClientSize = new Size(1127, 684);
             Controls.Add(ribbon);
             Controls.Add(ribbonStatusBar);
             IconOptions.Icon = (Icon)resources.GetObject("frmMain.IconOptions.Icon");
+            Margin = new Padding(3, 2, 3, 2);
             Name = "frmMain";
             Ribbon = ribbon;
             StatusBar = ribbonStatusBar;
+            WindowState = FormWindowState.Maximized;
+            FormClosing += frmMain_FormClosing;
             Load += frmMain_Load;
             ((System.ComponentModel.ISupportInitialize)ribbon).EndInit();
             ResumeLayout(false);

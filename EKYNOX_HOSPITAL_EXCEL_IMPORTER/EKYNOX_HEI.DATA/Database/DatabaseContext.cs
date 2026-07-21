@@ -16,6 +16,7 @@ namespace EKYNOX_HEI.DATA.Database
 
         public DbSet<Institutions> Institutions { get; set; }
         public DbSet<EducationAttendance> EducationAttendance { get; set; }
+        public DbSet<Institutions> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,6 +43,20 @@ namespace EKYNOX_HEI.DATA.Database
                 entity.Property(e => e.EDUCATIONFULLNAME).HasMaxLength(150);
                 entity.Property(e => e.FILENAME).HasMaxLength(150);
                 entity.Property(e => e.FILEPATH).HasMaxLength(300);
+            });
+            #endregion
+
+            #region Users
+            modelBuilder.Entity<Users>
+            (entity =>
+            {
+                entity.HasKey(e => e.LOGICALREF);
+                entity.Property(e => e.NAME).HasMaxLength(150);
+                entity.Property(e => e.USERNAME).HasMaxLength(150);
+                entity.Property(e => e.SURNAME).HasMaxLength(150);
+                entity.Property(e => e.PASSWORD).HasMaxLength(300);
+                entity.Property(e => e.EMAIL).HasMaxLength(150);
+                entity.Property(e => e.PHONE).HasMaxLength(20);
             });
             #endregion
         }
