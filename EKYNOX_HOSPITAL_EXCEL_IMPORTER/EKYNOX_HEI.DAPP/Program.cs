@@ -1,9 +1,11 @@
 using DevExpress.Xpo.Logger.Transport;
+using EKYNOX_HEI.DAPP.Controller;
 using EKYNOX_HEI.DAPP.View;
 using EKYNOX_HEI.DATA.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using Host = Microsoft.Extensions.Hosting.Host;
 
 namespace EKYNOX_HEI.DAPP
@@ -25,22 +27,31 @@ namespace EKYNOX_HEI.DAPP
                     // SQLite bağlantısı
                     services.AddDbContext<DatabaseContext>(options =>
                     {
-                        options.UseSqlite("Data Source=Ekynox.db");
+                        options.UseSqlite("Data Source=EkynoxHei.db");
                     });
 
                     //// Servisler
-                    //services.AddScoped<CustomerService>();
+                    services.AddScoped<clsInstitutions>();
 
                     //// Formlar
-                    //services.AddTransient<frmMain>();
+                    services.AddTransient<frmInstitutions>();
+                    services.AddTransient<frmMain>();
+                    services.AddTransient<frmLoading>();
                 })
                 .Build();
+
+            using (var scope = host.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+
+                db.Database.Migrate();
+            }
 
             DevExpress.LookAndFeel.UserLookAndFeel.Default.SetSkinStyle(DevExpress.LookAndFeel.SkinStyle.WXICompact);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             ApplicationConfiguration.Initialize();
-            Application.Run(new frmMain());
+            Application.Run(host.Services.GetRequiredService<frmLoading>());
         }
     }
 }
