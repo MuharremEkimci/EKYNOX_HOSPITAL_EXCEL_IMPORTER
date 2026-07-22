@@ -32,7 +32,7 @@ namespace EKYNOX_HEI.DAPP.View
             if (res.Status == CORE.Enums.StatusEnum.Error)
             {
                 MessageBox.Show("Kurumlar veritabanından getirilirken hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                AppLogger.Error($@"ProcessLocation: {nameof(frmInstitutions)}, Module: {nameof(DataRefresh)} - Hata Detayı: {res.Message}");
+                AppLogger.Error($@"ProcessDate: {DateTime.Now}, ProcessLocation: {nameof(frmInstitutions)}, Module: {nameof(DataRefresh)} - Hata Detayı: {res.Message}");
                 return;
             }
 
@@ -159,7 +159,7 @@ namespace EKYNOX_HEI.DAPP.View
         {
             if (Validate())
             {
-                institutionsModel.Code = teCode.EditValue?.ToString();
+                institutionsModel.Code = institutionService.CreateInstutionNo().Data;
                 institutionsModel.Name = teName.EditValue?.ToString();
                 institutionsModel.City = teCity.EditValue?.ToString();
                 institutionsModel.Town = teTown.EditValue?.ToString();

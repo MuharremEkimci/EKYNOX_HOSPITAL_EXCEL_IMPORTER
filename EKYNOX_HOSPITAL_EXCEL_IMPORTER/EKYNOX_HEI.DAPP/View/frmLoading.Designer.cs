@@ -94,6 +94,7 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "SplashScreen1";
             Load += SplashScreen1_Load;
+            Shown += frmLoading_Shown;
             ((System.ComponentModel.ISupportInitialize)progressBarControl.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)peImage.Properties).EndInit();
             ResumeLayout(false);
