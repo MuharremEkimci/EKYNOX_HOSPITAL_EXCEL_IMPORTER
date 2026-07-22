@@ -2,6 +2,8 @@
 using DevExpress.XtraBars.Helpers;
 using DevExpress.XtraEditors;
 using DevExpress.XtraSplashScreen;
+using EKYNOX_HEI.DAPP.Controller;
+using EKYNOX_HEI.DATA.Database;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -16,12 +18,14 @@ namespace EKYNOX_HEI.DAPP.View
 {
     public partial class frmMain : DevExpress.XtraBars.Ribbon.RibbonForm
     {
+        private readonly DatabaseContext context;
         private readonly IServiceProvider serviceProvider;
 
-        public frmMain(IServiceProvider serviceProvider)
+        public frmMain(IServiceProvider serviceProvider, DatabaseContext _context)
         {
             InitializeComponent();
             this.serviceProvider = serviceProvider;
+            this.context = _context;
         }
 
         private static void OpenForm(Form form, bool showDialog = false, bool isChildForm = true)
@@ -49,15 +53,19 @@ namespace EKYNOX_HEI.DAPP.View
 
         private void btnAppExit_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (XtraMessageBox.Show("Programdan Çıkılacaktır.", "Uyarı", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-            {
-                Application.Exit();
-            }
+            Application.Exit();
         }
 
         private void btnUsers_ItemClick(object sender, ItemClickEventArgs e)
         {
+            if (clsMain.userInfo.Role == CORE.Enums.RoleEnum.User)
+            {
+                MessageBox.Show("Giriş yetkiniz bulunmamaktadır.","Uyarı", MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
+                return;
+            }
 
+            var frm = serviceProvider.GetRequiredService<frmUsers>();
+            OpenForm(frm, true, false);
         }
 
         private void btnInstitutions_ItemClick(object sender, ItemClickEventArgs e)
@@ -67,6 +75,11 @@ namespace EKYNOX_HEI.DAPP.View
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+        }
+
+        private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (XtraMessageBox.Show("Programdan Çıkılacaktır.", "Uyarı", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {

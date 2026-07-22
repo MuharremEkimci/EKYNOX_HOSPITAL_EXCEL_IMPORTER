@@ -32,11 +32,14 @@ namespace EKYNOX_HEI.DAPP
 
                     //// Servisler
                     services.AddScoped<clsInstitutions>();
+                    services.AddScoped<clsUsers>();
 
                     //// Formlar
                     services.AddTransient<frmInstitutions>();
                     services.AddTransient<frmMain>();
                     services.AddTransient<frmLoading>();
+                    services.AddTransient<frmUsers>();
+                    services.AddTransient<frmLogin>();
                 })
                 .Build();
 

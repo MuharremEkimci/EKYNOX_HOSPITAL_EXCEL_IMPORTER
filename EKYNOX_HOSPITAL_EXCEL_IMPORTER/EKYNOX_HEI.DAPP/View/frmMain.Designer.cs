@@ -163,6 +163,7 @@
             StatusBar = ribbonStatusBar;
             WindowState = FormWindowState.Maximized;
             FormClosing += frmMain_FormClosing;
+            FormClosed += frmMain_FormClosed;
             Load += frmMain_Load;
             ((System.ComponentModel.ISupportInitialize)ribbon).EndInit();
             ResumeLayout(false);

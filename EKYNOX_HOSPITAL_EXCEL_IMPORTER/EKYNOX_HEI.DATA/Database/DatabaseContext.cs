@@ -16,7 +16,7 @@ namespace EKYNOX_HEI.DATA.Database
 
         public DbSet<Institutions> Institutions { get; set; }
         public DbSet<EducationAttendance> EducationAttendance { get; set; }
-        public DbSet<Institutions> Users { get; set; }
+        public DbSet<Users> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
