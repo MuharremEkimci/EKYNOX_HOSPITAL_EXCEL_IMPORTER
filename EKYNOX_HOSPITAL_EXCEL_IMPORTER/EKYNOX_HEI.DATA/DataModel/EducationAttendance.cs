@@ -14,5 +14,6 @@ namespace EKYNOX_HEI.DATA.DataModel
         public DateTime DATE_ { get; set; }        
         public string? FILEPATH { get; set; }
         public string? FILENAME { get; set; }
+        public EducationStatusEnum EDUCATIONSTATUS { get; set; }
     }
 }

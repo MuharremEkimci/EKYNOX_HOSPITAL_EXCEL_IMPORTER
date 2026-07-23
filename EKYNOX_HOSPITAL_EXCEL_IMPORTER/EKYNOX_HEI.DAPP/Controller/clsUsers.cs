@@ -99,7 +99,7 @@ namespace EKYNOX_HEI.DAPP.Controller
             var result = new ReturnData<bool>();
             try
             {
-                var control = context.Users.FirstOrDefault(c => c.LOGICALREF != user.LogicalRef && c.USERNAME == user.UserName || c.EMAIL == user.EMail);
+                var control = context.Users.FirstOrDefault(c => c.LOGICALREF != user.LogicalRef && (c.USERNAME == user.UserName || c.EMAIL == user.EMail));
                 if (control is not null)
                 {
                     result.Message = "Aynı kullanıcı adı veya mail adresi tekrar kullanılamaz.";
