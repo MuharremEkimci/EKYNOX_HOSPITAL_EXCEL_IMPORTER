@@ -30,14 +30,22 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEducationAttendance));
             layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
-            gridControl2 = new DevExpress.XtraGrid.GridControl();
-            gridView2 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            grdList = new DevExpress.XtraGrid.GridControl();
+            grvList = new DevExpress.XtraGrid.Views.Grid.GridView();
+            repDeDate = new DevExpress.XtraEditors.Repository.RepositoryItemDateEdit();
             btnClose = new DevExpress.XtraEditors.SimpleButton();
             btnSave = new DevExpress.XtraEditors.SimpleButton();
-            textEdit1 = new DevExpress.XtraEditors.TextEdit();
-            textEdit2 = new DevExpress.XtraEditors.TextEdit();
-            textEdit4 = new DevExpress.XtraEditors.TextEdit();
-            buttonEdit1 = new DevExpress.XtraEditors.ButtonEdit();
+            teDocNo = new DevExpress.XtraEditors.TextEdit();
+            beFileSelect = new DevExpress.XtraEditors.ButtonEdit();
+            btnReadImages = new DevExpress.XtraEditors.SimpleButton();
+            slueEducator = new DevExpress.XtraEditors.SearchLookUpEdit();
+            searchLookUpEdit1View = new DevExpress.XtraGrid.Views.Grid.GridView();
+            gridColumn3 = new DevExpress.XtraGrid.Columns.GridColumn();
+            gridColumn4 = new DevExpress.XtraGrid.Columns.GridColumn();
+            slueInstitutions = new DevExpress.XtraEditors.SearchLookUpEdit();
+            gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
+            gridColumn2 = new DevExpress.XtraGrid.Columns.GridColumn();
             Root = new DevExpress.XtraLayout.LayoutControlGroup();
             emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
             layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
@@ -50,20 +58,25 @@
             layoutControlGroup6 = new DevExpress.XtraLayout.LayoutControlGroup();
             layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             layoutControlItem12 = new DevExpress.XtraLayout.LayoutControlItem();
+            layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
             layoutControl2 = new DevExpress.XtraLayout.LayoutControl();
+            peMain = new DevExpress.XtraEditors.PictureEdit();
             layoutControlGroup3 = new DevExpress.XtraLayout.LayoutControlGroup();
-            pictureEdit2 = new DevExpress.XtraEditors.PictureEdit();
-            layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
             layoutControlGroup5 = new DevExpress.XtraLayout.LayoutControlGroup();
+            layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)layoutControl1).BeginInit();
             layoutControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)gridControl2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)gridView2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)textEdit1.Properties).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)textEdit2.Properties).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)textEdit4.Properties).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)buttonEdit1.Properties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)grdList).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)grvList).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)repDeDate).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)repDeDate.CalendarTimeProperties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)teDocNo.Properties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)beFileSelect.Properties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)slueEducator.Properties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)searchLookUpEdit1View).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)slueInstitutions.Properties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Root).BeginInit();
             ((System.ComponentModel.ISupportInitialize)emptySpaceItem1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem3).BeginInit();
@@ -76,6 +89,7 @@
             ((System.ComponentModel.ISupportInitialize)layoutControlGroup6).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem12).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControlItem1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)splitContainerControl1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel1).BeginInit();
             splitContainerControl1.Panel1.SuspendLayout();
@@ -84,21 +98,22 @@
             splitContainerControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)layoutControl2).BeginInit();
             layoutControl2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)peMain.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlGroup3).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureEdit2.Properties).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)layoutControlItem9).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlGroup5).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControlItem9).BeginInit();
             SuspendLayout();
             // 
             // layoutControl1
             // 
-            layoutControl1.Controls.Add(gridControl2);
+            layoutControl1.Controls.Add(grdList);
             layoutControl1.Controls.Add(btnClose);
             layoutControl1.Controls.Add(btnSave);
-            layoutControl1.Controls.Add(textEdit1);
-            layoutControl1.Controls.Add(textEdit2);
-            layoutControl1.Controls.Add(textEdit4);
-            layoutControl1.Controls.Add(buttonEdit1);
+            layoutControl1.Controls.Add(teDocNo);
+            layoutControl1.Controls.Add(beFileSelect);
+            layoutControl1.Controls.Add(btnReadImages);
+            layoutControl1.Controls.Add(slueEducator);
+            layoutControl1.Controls.Add(slueInstitutions);
             layoutControl1.Dock = DockStyle.Fill;
             layoutControl1.Location = new Point(0, 0);
             layoutControl1.Name = "layoutControl1";
@@ -108,20 +123,31 @@
             layoutControl1.TabIndex = 0;
             layoutControl1.Text = "layoutControl1";
             // 
-            // gridControl2
+            // grdList
             // 
-            gridControl2.Location = new Point(5, 167);
-            gridControl2.MainView = gridView2;
-            gridControl2.Name = "gridControl2";
-            gridControl2.Size = new Size(679, 562);
-            gridControl2.TabIndex = 5;
-            gridControl2.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { gridView2 });
+            grdList.Location = new Point(5, 207);
+            grdList.MainView = grvList;
+            grdList.Name = "grdList";
+            grdList.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repDeDate });
+            grdList.Size = new Size(679, 522);
+            grdList.TabIndex = 6;
+            grdList.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { grvList });
             // 
-            // gridView2
+            // grvList
             // 
-            gridView2.GridControl = gridControl2;
-            gridView2.Name = "gridView2";
-            gridView2.OptionsView.ShowGroupPanel = false;
+            grvList.GridControl = grdList;
+            grvList.Name = "grvList";
+            grvList.OptionsView.ShowGroupPanel = false;
+            grvList.FocusedRowChanged += grvList_FocusedRowChanged;
+            // 
+            // repDeDate
+            // 
+            repDeDate.AutoHeight = false;
+            repDeDate.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            repDeDate.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            repDeDate.Name = "repDeDate";
+            repDeDate.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            repDeDate.UseMaskAsDisplayFormat = true;
             // 
             // btnClose
             // 
@@ -130,7 +156,7 @@
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(99, 36);
             btnClose.StyleController = layoutControl1;
-            btnClose.TabIndex = 9;
+            btnClose.TabIndex = 8;
             btnClose.Text = "Vazgeç [F3]";
             btnClose.Click += btnClose_Click;
             // 
@@ -141,42 +167,112 @@
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(99, 36);
             btnSave.StyleController = layoutControl1;
-            btnSave.TabIndex = 8;
+            btnSave.TabIndex = 7;
             btnSave.Text = "Kaydet [F2]";
             btnSave.Click += btnSave_Click;
             // 
-            // textEdit1
+            // teDocNo
             // 
-            textEdit1.Location = new Point(86, 35);
-            textEdit1.Name = "textEdit1";
-            textEdit1.Size = new Size(227, 20);
-            textEdit1.StyleController = layoutControl1;
-            textEdit1.TabIndex = 2;
+            teDocNo.Location = new Point(86, 35);
+            teDocNo.Name = "teDocNo";
+            teDocNo.Properties.ReadOnly = true;
+            teDocNo.Properties.UseReadOnlyAppearance = false;
+            teDocNo.Size = new Size(227, 20);
+            teDocNo.StyleController = layoutControl1;
+            teDocNo.TabIndex = 0;
             // 
-            // textEdit2
+            // beFileSelect
             // 
-            textEdit2.Location = new Point(86, 83);
-            textEdit2.Name = "textEdit2";
-            textEdit2.Size = new Size(227, 20);
-            textEdit2.StyleController = layoutControl1;
-            textEdit2.TabIndex = 4;
+            beFileSelect.Location = new Point(77, 143);
+            beFileSelect.Name = "beFileSelect";
+            beFileSelect.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton() });
+            beFileSelect.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            beFileSelect.Size = new Size(607, 20);
+            beFileSelect.StyleController = layoutControl1;
+            beFileSelect.TabIndex = 4;
+            beFileSelect.ButtonClick += btnFileSelect_ButtonClick;
             // 
-            // textEdit4
+            // btnReadImages
             // 
-            textEdit4.Location = new Point(86, 59);
-            textEdit4.Name = "textEdit4";
-            textEdit4.Size = new Size(227, 20);
-            textEdit4.StyleController = layoutControl1;
-            textEdit4.TabIndex = 3;
+            btnReadImages.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter;
+            btnReadImages.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("btnReadImages.ImageOptions.SvgImage");
+            btnReadImages.Location = new Point(5, 167);
+            btnReadImages.Name = "btnReadImages";
+            btnReadImages.Size = new Size(679, 36);
+            btnReadImages.StyleController = layoutControl1;
+            btnReadImages.TabIndex = 5;
+            btnReadImages.Text = "Yüklenen Görüntüleri Oku ve Doğrula";
+            btnReadImages.Click += btnReadImages_Click;
             // 
-            // buttonEdit1
+            // slueEducator
             // 
-            buttonEdit1.Location = new Point(77, 143);
-            buttonEdit1.Name = "buttonEdit1";
-            buttonEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton() });
-            buttonEdit1.Size = new Size(607, 20);
-            buttonEdit1.StyleController = layoutControl1;
-            buttonEdit1.TabIndex = 0;
+            slueEducator.Location = new Point(86, 59);
+            slueEducator.Name = "slueEducator";
+            slueEducator.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            slueEducator.Properties.NullText = "";
+            slueEducator.Properties.PopupView = searchLookUpEdit1View;
+            slueEducator.Size = new Size(227, 20);
+            slueEducator.StyleController = layoutControl1;
+            slueEducator.TabIndex = 2;
+            // 
+            // searchLookUpEdit1View
+            // 
+            searchLookUpEdit1View.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gridColumn3, gridColumn4 });
+            searchLookUpEdit1View.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
+            searchLookUpEdit1View.Name = "searchLookUpEdit1View";
+            searchLookUpEdit1View.OptionsSelection.EnableAppearanceFocusedCell = false;
+            searchLookUpEdit1View.OptionsView.ShowGroupPanel = false;
+            // 
+            // gridColumn3
+            // 
+            gridColumn3.Caption = "Kullanıcı Adı";
+            gridColumn3.FieldName = "UserName";
+            gridColumn3.Name = "gridColumn3";
+            gridColumn3.Visible = true;
+            gridColumn3.VisibleIndex = 0;
+            // 
+            // gridColumn4
+            // 
+            gridColumn4.Caption = "Adı Soyadı";
+            gridColumn4.FieldName = "FullName";
+            gridColumn4.Name = "gridColumn4";
+            gridColumn4.Visible = true;
+            gridColumn4.VisibleIndex = 1;
+            // 
+            // slueInstitutions
+            // 
+            slueInstitutions.Location = new Point(86, 83);
+            slueInstitutions.Name = "slueInstitutions";
+            slueInstitutions.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            slueInstitutions.Properties.NullText = "";
+            slueInstitutions.Properties.PopupView = gridView1;
+            slueInstitutions.Size = new Size(227, 20);
+            slueInstitutions.StyleController = layoutControl1;
+            slueInstitutions.TabIndex = 3;
+            // 
+            // gridView1
+            // 
+            gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] { gridColumn1, gridColumn2 });
+            gridView1.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
+            gridView1.Name = "gridView1";
+            gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
+            gridView1.OptionsView.ShowGroupPanel = false;
+            // 
+            // gridColumn1
+            // 
+            gridColumn1.Caption = "Kodu";
+            gridColumn1.FieldName = "Code";
+            gridColumn1.Name = "gridColumn1";
+            gridColumn1.Visible = true;
+            gridColumn1.VisibleIndex = 0;
+            // 
+            // gridColumn2
+            // 
+            gridColumn2.Caption = "Adı";
+            gridColumn2.FieldName = "Name";
+            gridColumn2.Name = "gridColumn2";
+            gridColumn2.Visible = true;
+            gridColumn2.VisibleIndex = 1;
             // 
             // Root
             // 
@@ -219,7 +315,7 @@
             // 
             // layoutControlItem6
             // 
-            layoutControlItem6.Control = textEdit2;
+            layoutControlItem6.Control = slueInstitutions;
             layoutControlItem6.Location = new Point(0, 48);
             layoutControlItem6.Name = "layoutControlItem6";
             layoutControlItem6.Size = new Size(303, 24);
@@ -228,7 +324,7 @@
             // 
             // layoutControlItem5
             // 
-            layoutControlItem5.Control = textEdit1;
+            layoutControlItem5.Control = teDocNo;
             layoutControlItem5.Location = new Point(0, 0);
             layoutControlItem5.Name = "layoutControlItem5";
             layoutControlItem5.Size = new Size(303, 24);
@@ -243,7 +339,7 @@
             // 
             // layoutControlItem8
             // 
-            layoutControlItem8.Control = textEdit4;
+            layoutControlItem8.Control = slueEducator;
             layoutControlItem8.Location = new Point(0, 24);
             layoutControlItem8.Name = "layoutControlItem8";
             layoutControlItem8.Size = new Size(303, 24);
@@ -252,7 +348,7 @@
             // 
             // layoutControlGroup6
             // 
-            layoutControlGroup6.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutControlItem2, layoutControlItem12 });
+            layoutControlGroup6.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutControlItem2, layoutControlItem12, layoutControlItem1 });
             layoutControlGroup6.Location = new Point(0, 117);
             layoutControlGroup6.Name = "layoutControlGroup6";
             layoutControlGroup6.Padding = new DevExpress.XtraLayout.Utils.Padding(0, 0, 0, 0);
@@ -261,20 +357,28 @@
             // 
             // layoutControlItem2
             // 
-            layoutControlItem2.Control = gridControl2;
-            layoutControlItem2.Location = new Point(0, 24);
+            layoutControlItem2.Control = grdList;
+            layoutControlItem2.Location = new Point(0, 64);
             layoutControlItem2.Name = "layoutControlItem2";
-            layoutControlItem2.Size = new Size(683, 566);
+            layoutControlItem2.Size = new Size(683, 526);
             layoutControlItem2.TextVisible = false;
             // 
             // layoutControlItem12
             // 
-            layoutControlItem12.Control = buttonEdit1;
+            layoutControlItem12.Control = beFileSelect;
             layoutControlItem12.Location = new Point(0, 0);
             layoutControlItem12.Name = "layoutControlItem12";
             layoutControlItem12.Size = new Size(683, 24);
             layoutControlItem12.Text = "Dosya Seç";
             layoutControlItem12.TextSize = new Size(60, 13);
+            // 
+            // layoutControlItem1
+            // 
+            layoutControlItem1.Control = btnReadImages;
+            layoutControlItem1.Location = new Point(0, 24);
+            layoutControlItem1.Name = "layoutControlItem1";
+            layoutControlItem1.Size = new Size(683, 40);
+            layoutControlItem1.TextVisible = false;
             // 
             // splitContainerControl1
             // 
@@ -297,7 +401,7 @@
             // 
             // layoutControl2
             // 
-            layoutControl2.Controls.Add(pictureEdit2);
+            layoutControl2.Controls.Add(peMain);
             layoutControl2.Dock = DockStyle.Fill;
             layoutControl2.Location = new Point(0, 0);
             layoutControl2.Name = "layoutControl2";
@@ -306,6 +410,22 @@
             layoutControl2.Size = new Size(580, 774);
             layoutControl2.TabIndex = 0;
             layoutControl2.Text = "layoutControl2";
+            // 
+            // peMain
+            // 
+            peMain.Location = new Point(5, 26);
+            peMain.Name = "peMain";
+            peMain.Properties.AllowScrollOnMouseWheel = DevExpress.Utils.DefaultBoolean.True;
+            peMain.Properties.AllowScrollViaMouseDrag = true;
+            peMain.Properties.AllowZoom = DevExpress.Utils.DefaultBoolean.True;
+            peMain.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
+            peMain.Properties.ShowScrollBars = true;
+            peMain.Properties.ShowZoomSubMenu = DevExpress.Utils.DefaultBoolean.True;
+            peMain.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
+            peMain.Properties.ZoomingOperationMode = DevExpress.XtraEditors.Repository.ZoomingOperationMode.MouseWheel;
+            peMain.Size = new Size(570, 743);
+            peMain.StyleController = layoutControl2;
+            peMain.TabIndex = 12;
             // 
             // layoutControlGroup3
             // 
@@ -316,24 +436,6 @@
             layoutControlGroup3.Size = new Size(580, 774);
             layoutControlGroup3.TextVisible = false;
             // 
-            // pictureEdit2
-            // 
-            pictureEdit2.Location = new Point(5, 26);
-            pictureEdit2.Name = "pictureEdit2";
-            pictureEdit2.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
-            pictureEdit2.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Squeeze;
-            pictureEdit2.Size = new Size(570, 743);
-            pictureEdit2.StyleController = layoutControl2;
-            pictureEdit2.TabIndex = 12;
-            // 
-            // layoutControlItem9
-            // 
-            layoutControlItem9.Control = pictureEdit2;
-            layoutControlItem9.Location = new Point(0, 0);
-            layoutControlItem9.Name = "layoutControlItem9";
-            layoutControlItem9.Size = new Size(574, 747);
-            layoutControlItem9.TextVisible = false;
-            // 
             // layoutControlGroup5
             // 
             layoutControlGroup5.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutControlItem9 });
@@ -343,6 +445,14 @@
             layoutControlGroup5.Size = new Size(580, 774);
             layoutControlGroup5.Text = "Görüntü";
             // 
+            // layoutControlItem9
+            // 
+            layoutControlItem9.Control = peMain;
+            layoutControlItem9.Location = new Point(0, 0);
+            layoutControlItem9.Name = "layoutControlItem9";
+            layoutControlItem9.Size = new Size(574, 747);
+            layoutControlItem9.TextVisible = false;
+            // 
             // frmEducationAttendance
             // 
             AutoScaleDimensions = new SizeF(6F, 13F);
@@ -350,15 +460,22 @@
             ClientSize = new Size(1279, 774);
             Controls.Add(splitContainerControl1);
             Name = "frmEducationAttendance";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Eğitim Katılım Form";
+            WindowState = FormWindowState.Maximized;
+            Load += frmEducationAttendance_Load;
             ((System.ComponentModel.ISupportInitialize)layoutControl1).EndInit();
             layoutControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)gridControl2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)gridView2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)textEdit1.Properties).EndInit();
-            ((System.ComponentModel.ISupportInitialize)textEdit2.Properties).EndInit();
-            ((System.ComponentModel.ISupportInitialize)textEdit4.Properties).EndInit();
-            ((System.ComponentModel.ISupportInitialize)buttonEdit1.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)grdList).EndInit();
+            ((System.ComponentModel.ISupportInitialize)grvList).EndInit();
+            ((System.ComponentModel.ISupportInitialize)repDeDate.CalendarTimeProperties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)repDeDate).EndInit();
+            ((System.ComponentModel.ISupportInitialize)teDocNo.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)beFileSelect.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)slueEducator.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)searchLookUpEdit1View).EndInit();
+            ((System.ComponentModel.ISupportInitialize)slueInstitutions.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)Root).EndInit();
             ((System.ComponentModel.ISupportInitialize)emptySpaceItem1).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem3).EndInit();
@@ -371,6 +488,7 @@
             ((System.ComponentModel.ISupportInitialize)layoutControlGroup6).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem2).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem12).EndInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControlItem1).EndInit();
             ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel1).EndInit();
             splitContainerControl1.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel2).EndInit();
@@ -379,10 +497,10 @@
             splitContainerControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)layoutControl2).EndInit();
             layoutControl2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)peMain.Properties).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlGroup3).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureEdit2.Properties).EndInit();
-            ((System.ComponentModel.ISupportInitialize)layoutControlItem9).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlGroup5).EndInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControlItem9).EndInit();
             ResumeLayout(false);
         }
 
@@ -390,20 +508,18 @@
 
         private DevExpress.XtraLayout.LayoutControl layoutControl1;
         private DevExpress.XtraLayout.LayoutControlGroup Root;
-        private DevExpress.XtraGrid.GridControl gridControl2;
-        private DevExpress.XtraGrid.Views.Grid.GridView gridView2;
+        private DevExpress.XtraGrid.GridControl grdList;
+        private DevExpress.XtraGrid.Views.Grid.GridView grvList;
         private DevExpress.XtraEditors.SimpleButton btnClose;
         private DevExpress.XtraEditors.SimpleButton btnSave;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem1;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem3;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem4;
-        private DevExpress.XtraEditors.TextEdit textEdit1;
+        private DevExpress.XtraEditors.TextEdit teDocNo;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem5;
-        private DevExpress.XtraEditors.TextEdit textEdit2;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem6;
-        private DevExpress.XtraEditors.TextEdit textEdit4;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem8;
-        private DevExpress.XtraEditors.ButtonEdit buttonEdit1;
+        private DevExpress.XtraEditors.ButtonEdit beFileSelect;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem12;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup4;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem2;
@@ -411,9 +527,20 @@
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem2;
         private DevExpress.XtraEditors.SplitContainerControl splitContainerControl1;
         private DevExpress.XtraLayout.LayoutControl layoutControl2;
-        private DevExpress.XtraEditors.PictureEdit pictureEdit2;
+        private DevExpress.XtraEditors.PictureEdit peMain;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup3;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup5;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem9;
+        private DevExpress.XtraEditors.Repository.RepositoryItemDateEdit repDeDate;
+        private DevExpress.XtraEditors.SimpleButton btnReadImages;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem1;
+        private DevExpress.XtraEditors.SearchLookUpEdit slueEducator;
+        private DevExpress.XtraGrid.Views.Grid.GridView searchLookUpEdit1View;
+        private DevExpress.XtraEditors.SearchLookUpEdit slueInstitutions;
+        private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn2;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn3;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn4;
     }
 }

@@ -60,7 +60,7 @@ namespace EKYNOX_HEI.DAPP.View
         {
             if (clsMain.userInfo.Role == CORE.Enums.RoleEnum.User)
             {
-                MessageBox.Show("Giriş yetkiniz bulunmamaktadır.","Uyarı", MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
+                MessageBox.Show("Giriş yetkiniz bulunmamaktadır.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -85,6 +85,17 @@ namespace EKYNOX_HEI.DAPP.View
             {
                 Application.Exit();
             }
+        }
+
+        private void barButtonItem1_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
+        }
+
+        private void btnEducationAttendandce_ItemClick(object sender, ItemClickEventArgs e)
+        {           
+            var frm = serviceProvider.GetRequiredService<frmEducationAttendanceList>();
+            OpenForm(frm);
         }
     }
 }
