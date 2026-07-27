@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             ribbon = new DevExpress.XtraBars.Ribbon.RibbonControl();
             rgbbTemalar = new DevExpress.XtraBars.RibbonGalleryBarItem();
@@ -41,9 +42,11 @@
             rpProcess = new DevExpress.XtraBars.Ribbon.RibbonPage();
             ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             btnInstitutions = new DevExpress.XtraBars.BarButtonItem();
-            barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
+            btnEducationAttendandce = new DevExpress.XtraBars.BarButtonItem();
             ribbonStatusBar = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
+            xtmm = new DevExpress.XtraTabbedMdi.XtraTabbedMdiManager(components);
             ((System.ComponentModel.ISupportInitialize)ribbon).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)xtmm).BeginInit();
             SuspendLayout();
             // 
             // ribbon
@@ -122,7 +125,7 @@
             // ribbonPageGroup1
             // 
             ribbonPageGroup1.ItemLinks.Add(btnInstitutions);
-            ribbonPageGroup1.ItemLinks.Add(barButtonItem1);
+            ribbonPageGroup1.ItemLinks.Add(btnEducationAttendandce);
             ribbonPageGroup1.Name = "ribbonPageGroup1";
             ribbonPageGroup1.Text = "İşlemler";
             // 
@@ -134,12 +137,13 @@
             btnInstitutions.Name = "btnInstitutions";
             btnInstitutions.ItemClick += btnInstitutions_ItemClick;
             // 
-            // barButtonItem1
+            // btnEducationAttendandce
             // 
-            barButtonItem1.Caption = "Eğitim Katılım Listesi";
-            barButtonItem1.Id = 1;
-            barButtonItem1.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("barButtonItem1.ImageOptions.SvgImage");
-            barButtonItem1.Name = "barButtonItem1";
+            btnEducationAttendandce.Caption = "Eğitim Katılım Listesi";
+            btnEducationAttendandce.Id = 1;
+            btnEducationAttendandce.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("btnEducationAttendandce.ImageOptions.SvgImage");
+            btnEducationAttendandce.Name = "btnEducationAttendandce";
+            btnEducationAttendandce.ItemClick += btnEducationAttendandce_ItemClick;
             // 
             // ribbonStatusBar
             // 
@@ -149,6 +153,10 @@
             ribbonStatusBar.Ribbon = ribbon;
             ribbonStatusBar.Size = new Size(1127, 24);
             // 
+            // xtmm
+            // 
+            xtmm.MdiParent = this;
+            // 
             // frmMain
             // 
             AutoScaleDimensions = new SizeF(6F, 13F);
@@ -157,6 +165,7 @@
             Controls.Add(ribbon);
             Controls.Add(ribbonStatusBar);
             IconOptions.Icon = (Icon)resources.GetObject("frmMain.IconOptions.Icon");
+            IsMdiContainer = true;
             Margin = new Padding(3, 2, 3, 2);
             Name = "frmMain";
             Ribbon = ribbon;
@@ -166,6 +175,7 @@
             FormClosed += frmMain_FormClosed;
             Load += frmMain_Load;
             ((System.ComponentModel.ISupportInitialize)ribbon).EndInit();
+            ((System.ComponentModel.ISupportInitialize)xtmm).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -176,7 +186,7 @@
         private DevExpress.XtraBars.Ribbon.RibbonPage rpProcess;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
         private DevExpress.XtraBars.Ribbon.RibbonStatusBar ribbonStatusBar;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem1;
+        private DevExpress.XtraBars.BarButtonItem btnEducationAttendandce;
         private DevExpress.XtraBars.BarButtonItem btnInstitutions;
         private DevExpress.XtraBars.RibbonGalleryBarItem rgbTemalar;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
@@ -186,5 +196,6 @@
         private DevExpress.XtraBars.BarButtonItem btnUsers;
         private DevExpress.XtraBars.RibbonGalleryBarItem rgbbTemalar;
         private DevExpress.XtraBars.BarButtonItem btnAppExit;
+        private DevExpress.XtraTabbedMdi.XtraTabbedMdiManager xtmm;
     }
 }

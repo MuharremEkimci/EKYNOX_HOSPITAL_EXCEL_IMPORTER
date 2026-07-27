@@ -1,4 +1,5 @@
 ﻿using DevExpress.XtraEditors;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,9 +13,11 @@ namespace EKYNOX_HEI.DAPP.View
 {
     public partial class frmEducationAttendanceList : DevExpress.XtraEditors.XtraForm
     {
-        public frmEducationAttendanceList()
+        private readonly IServiceProvider serviceProvider;
+        public frmEducationAttendanceList(IServiceProvider serviceProvider)
         {
             InitializeComponent();
+            this.serviceProvider = serviceProvider;
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -34,7 +37,8 @@ namespace EKYNOX_HEI.DAPP.View
         {
             if (e.Item.Name == "bbtnAdd")
             {
-
+                var frm = serviceProvider.GetRequiredService<frmEducationAttendance>();
+                frm.ShowDialog();
             }
 
             if (e.Item.Name == "bbtnUpdate")

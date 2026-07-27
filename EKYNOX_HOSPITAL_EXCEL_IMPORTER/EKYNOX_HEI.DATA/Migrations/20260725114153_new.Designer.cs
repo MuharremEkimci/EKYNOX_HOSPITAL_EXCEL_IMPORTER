@@ -3,6 +3,7 @@ using System;
 using EKYNOX_HEI.DATA.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EKYNOX_HEI.DATA.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260725114153_new")]
+    partial class @new
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.10");
@@ -23,44 +26,19 @@ namespace EKYNOX_HEI.DATA.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("DATE_")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("DOCNO")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("EDUCATIONSTATUS")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EDUCATORREF")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("INSTUTIONREF")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("LOGICALREF");
-
-                    b.ToTable("EducationAttendance");
-                });
-
-            modelBuilder.Entity("EKYNOX_HEI.DATA.DataModel.EducationAttendanceDetail", b =>
-                {
-                    b.Property<int>("LOGICALREF")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EDUCATIONATTENDANCEREF")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("EDUCATIONDATE")
+                    b.Property<string>("EDUCATIONFULLNAME")
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("EDUCATIONNUMBER")
+                    b.Property<int>("EDUCATIONSTATUS")
                         .HasColumnType("INTEGER");
-
-                    b.Property<int>("EDUCATIONTYPE")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<byte[]>("FILEDATA")
-                        .HasColumnType("BLOB");
 
                     b.Property<string>("FILENAME")
                         .HasMaxLength(150)
@@ -70,40 +48,12 @@ namespace EKYNOX_HEI.DATA.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("MODULETYPE")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("READANDEXCELPROCESS")
+                    b.Property<int>("INSTUTIONREF")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("LOGICALREF");
 
-                    b.ToTable("EducationAttendanceDetail");
-                });
-
-            modelBuilder.Entity("EKYNOX_HEI.DATA.DataModel.EducationAttendanceFileRead", b =>
-                {
-                    b.Property<int>("LOGICALREF")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("CLASSNO")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EDUCATIONATTENDANCEDETAILREF")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("NAME")
-                        .HasMaxLength(150)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("SURNAME")
-                        .HasMaxLength(300)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("LOGICALREF");
-
-                    b.ToTable("EducationAttendanceFileRead");
+                    b.ToTable("EducationAttendance");
                 });
 
             modelBuilder.Entity("EKYNOX_HEI.DATA.DataModel.Institutions", b =>

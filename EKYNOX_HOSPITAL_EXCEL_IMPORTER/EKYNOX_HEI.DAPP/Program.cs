@@ -33,6 +33,7 @@ namespace EKYNOX_HEI.DAPP
                     //// Servisler
                     services.AddScoped<clsInstitutions>();
                     services.AddScoped<clsUsers>();
+                    services.AddScoped<clsEducationAttendance>();
 
                     //// Formlar
                     services.AddTransient<frmInstitutions>();
@@ -40,6 +41,9 @@ namespace EKYNOX_HEI.DAPP
                     services.AddTransient<frmLoading>();
                     services.AddTransient<frmUsers>();
                     services.AddTransient<frmLogin>();
+                    services.AddTransient<frmEducationAttendanceList>();
+                    services.AddTransient<frmEducationAttendance>();
+                    services.AddTransient<frmImageReadConfirm>();
                 })
                 .Build();
 
