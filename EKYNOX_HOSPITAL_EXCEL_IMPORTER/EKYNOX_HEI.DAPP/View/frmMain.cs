@@ -93,9 +93,14 @@ namespace EKYNOX_HEI.DAPP.View
         }
 
         private void btnEducationAttendandce_ItemClick(object sender, ItemClickEventArgs e)
-        {           
+        {
             var frm = serviceProvider.GetRequiredService<frmEducationAttendanceList>();
             OpenForm(frm);
+        }
+
+        private void barButtonItem1_ItemClick_1(object sender, ItemClickEventArgs e)
+        {
+            new frmAIChat().ShowDialog();
         }
     }
 }

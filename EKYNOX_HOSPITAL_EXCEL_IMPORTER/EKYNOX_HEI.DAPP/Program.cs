@@ -1,6 +1,7 @@
 using DevExpress.Xpo.Logger.Transport;
 using EKYNOX_HEI.DAPP.Controller;
 using EKYNOX_HEI.DAPP.View;
+using EKYNOX_HEI.DAPP.View.AISetting;
 using EKYNOX_HEI.DATA.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +45,7 @@ namespace EKYNOX_HEI.DAPP
                     services.AddTransient<frmEducationAttendanceList>();
                     services.AddTransient<frmEducationAttendance>();
                     services.AddTransient<frmImageReadConfirm>();
+                    services.AddTransient<frmAISettingList>();
                 })
                 .Build();
 
@@ -58,7 +60,8 @@ namespace EKYNOX_HEI.DAPP
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             ApplicationConfiguration.Initialize();
-            Application.Run(host.Services.GetRequiredService<frmLoading>());
+            Application.Run(host.Services.GetRequiredService<frmLoading>());    
+            //Application.Run(host.Services.GetRequiredService<frmMain>());
         }
     }
 }

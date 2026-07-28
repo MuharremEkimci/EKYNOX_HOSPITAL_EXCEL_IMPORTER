@@ -1,12 +1,7 @@
 ﻿using Google.GenAI;
 using Google.GenAI.Types;
-using System;
-using System;
-using System.Collections.Generic;
-using System.IO;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
-using System.Threading.Tasks;
-
 
 namespace EKYNOX_HEI.CORE.Helpers
 {
@@ -19,7 +14,8 @@ namespace EKYNOX_HEI.CORE.Helpers
             apiKey = _apiKey;
         }
 
-        public async Task<ReturnData<string>> AIImageQuestion(string prompt, byte[] imageBytes, string imageMimeType)
+        [Display(Name = "Method", Description = "Gemini AI Methodu")]
+        public async Task<ReturnData<string>> GeminiAIQuestion(string prompt, dynamic data, bool blImageUsing = false, bool blAnswerJsonTrigger = false)
         {
             var result = new ReturnData<string>();
 
@@ -28,31 +24,54 @@ namespace EKYNOX_HEI.CORE.Helpers
                 var googleAI = new Client(apiKey: apiKey);
                 var aiModels = await googleAI.Models.ListAsync();
                 var aiModelNames = await aiModels.Select(c => c.Name).ToListAsync();
-                
+
+                var cfg = new GenerateContentConfig
+                {
+                    ResponseMimeType = "application/json", // Markdown (```json) ve ekstra metinleri API seviyesinde engeller
+                    Temperature = 0.1f                     // Halüsinasyon ve saçmalamayı önlemek için düşük sıcaklık
+                };
+
                 var errMessage = new StringBuilder();
 
-                foreach (var modelName in aiModelNames)
+                foreach (var modelName in data.aiModelNames)
                 {
                     try
                     {
+                        var parts = new List<Part>();
+
+                        if (blImageUsing)
+                        {
+                            parts = new List<Part>
+                                {
+                                    Part.FromBytes(data.imageBytes, data.imageMimeType),
+                                    Part.FromText(prompt)
+                                };
+                        }
+                        else
+                        {
+                            parts = new List<Part>
+                                {
+                                    Part.FromText(prompt)
+                                };
+                        }
+
                         var response = await googleAI.Models.GenerateContentAsync
                             (
-                            model: modelName, 
+                            model: modelName,
                             contents: new Content
                             {
-                                Parts = new List<Part> 
-                                {
-                                    Part.FromBytes(imageBytes, imageMimeType),
-                                    Part.FromText(prompt)
-                                }
-                            });
+                                Parts = parts
+                            },
+                            config: blAnswerJsonTrigger ? cfg : null
+                            );
 
                         result.Data = response.Text;
+                        break;
                     }
                     catch (Exception ex)
                     {
-                        errMessage.AppendLine($"Model: {modelName} - Hata: {ex.Message}");
-                        continue;
+                       errMessage.AppendLine($"Model: {modelName} - Hata: {ex.Message}");
+                       continue;
                     }
                 }
             }
