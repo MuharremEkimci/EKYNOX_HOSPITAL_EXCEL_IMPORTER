@@ -44,31 +44,52 @@ namespace EKYNOX_HEI.DAPP.View
             //var ocrApp = new HandWritingOcrApp("https://readpaper.cognitiveservices.azure.com/", "9BAfnhkgsEGAAgmcpur4JZREmllvBUjx36a5lUu78EvcHTagoNolJQQJ99CGACYeBjFXJ3w3AAAFACOGTvuZ");
             //var dsd = ocrApp.OcrProcess(imageInfo.FileData);
 
-            var prompt = $@"
-                             1. Bu görseldeki el yazılarını oku.
-                             2. Sadece katılımcıların İSİM ve SOYİSİMLERİNİ ayıkla ve TÜRKÇE BÜYÜK HARFLERLE yaz.
-                             3. El yazılarını dikkatli oku.
-                             4. El yazılarını dikkatli okuyarak yüksek tahminde bulun. saçmalama.
-                             5. Birim, Tarih, İmzalar gibi detayları ekleme.
-                             6. Çıktı sadece json formatında ver. Herhangi bir yorum ekleme sadece json çıktı ver.
-                             7. ```json kullanma.
-                             8. Markdown kullanma.
-                             9. Açıklama yazma.
-                             10. Ekstra metin yazma. 
-                             11. Tekrar ediyorum. SADECE geçerli JSON döndür. Markdown kullanma. ```json kullanma. Açıklama yazma. Ekstra metin yazma.
-                             12. Çıktıyı SADECE JSON formatında ver:
-                             {{
-                               """"participants"""": [
-                                 {{
-                                   """"class_no"""": 1,
-                                   """"name"""": """"İSİM"""",
-                                   """"surname"""": """"SOYİSİM""""
-                                 }}
-                               ]
-                             }}";
+            //var prompt = $@"
+            //                 1. Bu görseldeki el yazılarını oku.
+            //                 2. Sadece katılımcıların İSİM ve SOYİSİMLERİNİ ayıkla ve TÜRKÇE BÜYÜK HARFLERLE yaz.
+            //                 3. El yazılarını dikkatli oku.
+            //                 4. El yazılarını dikkatli okuyarak yüksek tahminde bulun. saçmalama.
+            //                 5. Birim, Tarih, İmzalar gibi detayları ekleme.
+            //                 6. Çıktı sadece json formatında ver. Herhangi bir yorum ekleme sadece json çıktı ver.
+            //                 7. ```json kullanma.
+            //                 8. Markdown kullanma.
+            //                 9. Açıklama yazma.
+            //                 10. Ekstra metin yazma. 
+            //                 11. Tekrar ediyorum. SADECE geçerli JSON döndür. Markdown kullanma. ```json kullanma. Açıklama yazma. Ekstra metin yazma.
+            //                 12. Tekrar söylüyorum. SADECE geçerli JSON döndür. Markdown kullanma. ```json kullanma. Açıklama yazma. Ekstra metin yazma.
+            //                 13. Çıktıyı SADECE JSON formatında ver:
+            //                 {{
+            //                   """"participants"""": [
+            //                     {{
+            //                       """"class_no"""": 1,
+            //                       """"name"""": """"İSİM"""",
+            //                       """"surname"""": """"SOYİSİM""""
+            //                     }}
+            //                   ]
+            //                 }}";
+
+            string prompt = @"Sen profesyonel bir optik karakter tanıma (OCR) asistanısın. 
+            Görseldeki el yazısı katılım listesini incele ve katılan kişilerin ad ve soyadlarını ayıkla.
+            
+            GÖREVLER VE KURALLAR:
+            1. Görseldeki el yazılarını azami dikkatle oku ve doğru tahmin et.
+            2. SADECE kişilerin İSİM ve SOYİSİMLERİNİ al. Tablodaki Birim (Hostes, Vezne vb.), Tarih, Döküman No ve İmza alanlarını KESİNLİKLE dahil etme.
+            3. İsim ve soyisimleri Türkçe karakter kurallarına uygun olarak TÜMÜ BÜYÜK HARFLERLE yaz (Örn: İSMEK -> İSMEK, ı -> I).
+            4. İsim ve soyisimi ayrıştırarak şablona yerleştir.
+            
+            HEDEF JSON ŞEMASI:
+            {
+              ""participants"": [
+                {
+                  ""class_no"": 1,
+                  ""name"": ""MUSA"",
+                  ""surname"": ""TUNÇ""
+                }
+              ]
+            }";
 
             var aiApp = new AIHelper("AIzaSyAaEnYOkEPAvqysMM6HkhaE6l8HJBPJ7UU");
-            var result = await aiApp.AIImageQuestion(prompt, imageInfo.FileData, imageInfo.FileMimeType);
+            var result = await aiApp.GeminiAIQuestion(prompt, new { aiModelNames = new List<string>(), imageBytes = imageInfo.FileData, imageMimeType = imageInfo.FileMimeType }, true , true);
             var sdasd = result.Data;
             
         }

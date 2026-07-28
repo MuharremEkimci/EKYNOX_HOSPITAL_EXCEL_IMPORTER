@@ -33,12 +33,14 @@
             ribbon = new DevExpress.XtraBars.Ribbon.RibbonControl();
             rgbbTemalar = new DevExpress.XtraBars.RibbonGalleryBarItem();
             btnAppExit = new DevExpress.XtraBars.BarButtonItem();
+            btnAISettings = new DevExpress.XtraBars.BarButtonItem();
             ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             ribbonPageGroup4 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             btnUsers = new DevExpress.XtraBars.BarButtonItem();
             ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             rgbTemalar = new DevExpress.XtraBars.RibbonGalleryBarItem();
             ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             rpProcess = new DevExpress.XtraBars.Ribbon.RibbonPage();
             ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             btnInstitutions = new DevExpress.XtraBars.BarButtonItem();
@@ -53,10 +55,10 @@
             // 
             ribbon.EmptyAreaImageOptions.ImagePadding = new Padding(26, 24, 26, 24);
             ribbon.ExpandCollapseItem.Id = 0;
-            ribbon.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbon.ExpandCollapseItem, rgbbTemalar, btnAppExit });
+            ribbon.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbon.ExpandCollapseItem, rgbbTemalar, btnAppExit, btnAISettings });
             ribbon.Location = new Point(0, 0);
             ribbon.Margin = new Padding(3, 2, 3, 2);
-            ribbon.MaxItemId = 10;
+            ribbon.MaxItemId = 11;
             ribbon.Name = "ribbon";
             ribbon.OptionsMenuMinWidth = 283;
             ribbon.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { ribbonPage1, rpProcess });
@@ -77,9 +79,17 @@
             btnAppExit.Name = "btnAppExit";
             btnAppExit.ItemClick += btnAppExit_ItemClick;
             // 
+            // btnAISettings
+            // 
+            btnAISettings.Caption = "AI Ayarları";
+            btnAISettings.Id = 10;
+            btnAISettings.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("barButtonItem1.ImageOptions.SvgImage");
+            btnAISettings.Name = "btnAISettings";
+            btnAISettings.ItemClick += barButtonItem1_ItemClick_1;
+            // 
             // ribbonPage1
             // 
-            ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup4, ribbonPageGroup2, ribbonPageGroup3 });
+            ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup4, ribbonPageGroup2, ribbonPageGroup3, ribbonPageGroup5 });
             ribbonPage1.Name = "ribbonPage1";
             ribbonPage1.Text = "Genel";
             // 
@@ -115,6 +125,13 @@
             ribbonPageGroup3.ItemLinks.Add(btnAppExit);
             ribbonPageGroup3.Name = "ribbonPageGroup3";
             ribbonPageGroup3.Text = "Çıkış";
+            // 
+            // ribbonPageGroup5
+            // 
+            ribbonPageGroup5.AllowTextClipping = false;
+            ribbonPageGroup5.ItemLinks.Add(btnAISettings);
+            ribbonPageGroup5.Name = "ribbonPageGroup5";
+            ribbonPageGroup5.Text = "Yapay Zeka Ayarları";
             // 
             // rpProcess
             // 
@@ -197,5 +214,7 @@
         private DevExpress.XtraBars.RibbonGalleryBarItem rgbbTemalar;
         private DevExpress.XtraBars.BarButtonItem btnAppExit;
         private DevExpress.XtraTabbedMdi.XtraTabbedMdiManager xtmm;
+        private DevExpress.XtraBars.BarButtonItem btnAISettings;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup5;
     }
 }
