@@ -3,6 +3,7 @@ using System;
 using EKYNOX_HEI.DATA.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EKYNOX_HEI.DATA.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260729091702_AISetting")]
+    partial class AISetting
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.10");
@@ -26,19 +29,9 @@ namespace EKYNOX_HEI.DATA.Migrations
                     b.Property<int>("AI")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("AINO")
-                        .HasMaxLength(51)
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("APIKEY")
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CREATEDATE")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("CREATEDUSER")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ENDPOINT")
                         .HasMaxLength(150)
@@ -47,12 +40,6 @@ namespace EKYNOX_HEI.DATA.Migrations
                     b.Property<string>("METHODNAME")
                         .HasMaxLength(150)
                         .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("MODIFIEDDATE")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MODIFIEDUSER")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("USINGSTATUS")
                         .HasColumnType("INTEGER");
@@ -79,21 +66,6 @@ namespace EKYNOX_HEI.DATA.Migrations
                     b.Property<int>("AISETTINGREF")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CREATEDATE")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("CREATEDUSER")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("LINENR")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("MODIFIEDDATE")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MODIFIEDUSER")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("LOGICALREF");
 
                     b.ToTable("AISettingDetail");
@@ -103,12 +75,6 @@ namespace EKYNOX_HEI.DATA.Migrations
                 {
                     b.Property<int>("LOGICALREF")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CREATEDATE")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("CREATEDUSER")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("DOCNO")
@@ -124,12 +90,6 @@ namespace EKYNOX_HEI.DATA.Migrations
                     b.Property<int>("INSTUTIONREF")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("MODIFIEDDATE")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MODIFIEDUSER")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("LOGICALREF");
 
                     b.ToTable("EducationAttendance");
@@ -139,12 +99,6 @@ namespace EKYNOX_HEI.DATA.Migrations
                 {
                     b.Property<int>("LOGICALREF")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CREATEDATE")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("CREATEDUSER")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("EDUCATIONATTENDANCEREF")
@@ -170,12 +124,6 @@ namespace EKYNOX_HEI.DATA.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("MODIFIEDDATE")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MODIFIEDUSER")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("MODULETYPE")
                         .HasColumnType("INTEGER");
 
@@ -196,19 +144,7 @@ namespace EKYNOX_HEI.DATA.Migrations
                     b.Property<int>("CLASSNO")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CREATEDATE")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("CREATEDUSER")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("EDUCATIONATTENDANCEDETAILREF")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("MODIFIEDDATE")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MODIFIEDUSER")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("NAME")
@@ -242,21 +178,9 @@ namespace EKYNOX_HEI.DATA.Migrations
                         .HasMaxLength(51)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CREATEDATE")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("CREATEDUSER")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("DISTRICT")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("MODIFIEDDATE")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MODIFIEDUSER")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("NAME")
                         .HasMaxLength(150)

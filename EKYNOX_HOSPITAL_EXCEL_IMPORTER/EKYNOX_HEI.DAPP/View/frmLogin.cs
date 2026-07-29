@@ -1,7 +1,10 @@
-﻿using DevExpress.XtraEditors;
+﻿using AutoMapper;
+using DevExpress.XtraEditors;
 using EKYNOX_HEI.CORE.Enums;
 using EKYNOX_HEI.CORE.Helpers;
+using EKYNOX_HEI.CORE.Models.Users;
 using EKYNOX_HEI.DAPP.Controller;
+using EKYNOX_HEI.DATA.DataModel.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,12 +20,14 @@ namespace EKYNOX_HEI.DAPP.View
     {
         private readonly clsUsers userService;
         private readonly IServiceProvider serviceProvider;
+        private readonly UserInfoSet userInfo;
 
-        public frmLogin(IServiceProvider serviceProvider, clsUsers _userService)
+        public frmLogin(IServiceProvider serviceProvider, clsUsers _userService, UserInfoSet _userInfo)
         {
             InitializeComponent();
             this.serviceProvider = serviceProvider;
             this.userService = _userService;
+            this.userInfo = _userInfo;
         }
 
         private void frmLogin_Shown(object sender, EventArgs e)
@@ -57,7 +62,17 @@ namespace EKYNOX_HEI.DAPP.View
                 return;
             }
 
-            clsMain.userInfo = loginResult.Data;
+            var login = loginResult.Data;
+            userInfo.LogicalRef = login.LogicalRef;
+            userInfo.Role = login.Role;
+            userInfo.Nr = login.Nr;
+            userInfo.UserName = login.UserName; 
+            userInfo.EMail = login.EMail;
+            userInfo.Surname = login.Surname;
+            userInfo.Name = login.Name;
+            userInfo.Phone = login.Phone;
+            userInfo.Password = login.Password;
+
             Properties.Settings.Default.LastUserName = txtUserName.Text;
             Properties.Settings.Default.RememberUser = true;
             Properties.Settings.Default.Save();

@@ -1,8 +1,10 @@
 using DevExpress.Xpo.Logger.Transport;
+using DevExpress.XtraPrinting.Native;
 using EKYNOX_HEI.DAPP.Controller;
 using EKYNOX_HEI.DAPP.View;
 using EKYNOX_HEI.DAPP.View.AISetting;
 using EKYNOX_HEI.DATA.Database;
+using EKYNOX_HEI.DATA.DataModel.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,6 +37,8 @@ namespace EKYNOX_HEI.DAPP
                     services.AddScoped<clsInstitutions>();
                     services.AddScoped<clsUsers>();
                     services.AddScoped<clsEducationAttendance>();
+                    services.AddScoped<clsAISetting>();
+                    services.AddScoped<UserInfoSet>();
 
                     //// Formlar
                     services.AddTransient<frmInstitutions>();
@@ -46,6 +50,7 @@ namespace EKYNOX_HEI.DAPP
                     services.AddTransient<frmEducationAttendance>();
                     services.AddTransient<frmImageReadConfirm>();
                     services.AddTransient<frmAISettingList>();
+                    services.AddTransient<frmAISetting>();
                 })
                 .Build();
 
@@ -60,7 +65,7 @@ namespace EKYNOX_HEI.DAPP
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             ApplicationConfiguration.Initialize();
-            Application.Run(host.Services.GetRequiredService<frmLoading>());    
+            Application.Run(host.Services.GetRequiredService<frmLoading>());
             //Application.Run(host.Services.GetRequiredService<frmMain>());
         }
     }

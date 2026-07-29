@@ -88,9 +88,9 @@ namespace EKYNOX_HEI.DAPP.View
               ]
             }";
 
-            var aiApp = new AIHelper("AIzaSyAaEnYOkEPAvqysMM6HkhaE6l8HJBPJ7UU");
-            var result = await aiApp.GeminiAIQuestion(prompt, new { aiModelNames = new List<string>(), imageBytes = imageInfo.FileData, imageMimeType = imageInfo.FileMimeType }, true , true);
-            var sdasd = result.Data;
+            //var aiApp = new AIHelper("AIzaSyAaEnYOkEPAvqysMM6HkhaE6l8HJBPJ7UU");
+            //var result = await aiApp.GeminiAIQuestion(prompt, new { aiModelNames = new List<string>(), imageBytes = imageInfo.FileData, imageMimeType = imageInfo.FileMimeType }, true , true);
+            //var sdasd = result.Data;
             
         }
 

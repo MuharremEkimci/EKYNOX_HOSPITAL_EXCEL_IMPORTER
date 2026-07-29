@@ -33,5 +33,11 @@ namespace EKYNOX_HEI.CORE.Helpers
         {
             _logger.Error(message);
         }
+
+        public static void Error(DateTime ProcessDate, string ProcessLocation, string Event, string Method, string ErrMess )
+        {
+            string message = $@"ProcessDate: {ProcessDate}, ProcessLocation: {ProcessLocation}, Event: {Event}, Method: {Method} - Hata Detayı: {ErrMess}";
+            _logger.Error(message);
+        }
     }
 }

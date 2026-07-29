@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace EKYNOX_HEI.CORE.Models.AISetting
@@ -9,6 +10,7 @@ namespace EKYNOX_HEI.CORE.Models.AISetting
     public class AISettingModel
     {
         public int LogicalRef { get; set; }
+        public string? AiNo { get; set; }
         public AIEnum Ai { get; set; }
         public string? ApiKey { get; set; }
         public AIEnumUsingStatus UsingStatus { get; set; }
@@ -27,9 +29,14 @@ namespace EKYNOX_HEI.CORE.Models.AISetting
         [Browsable(false)]
         public int AISettingRef { get; set; }
 
+        [Editable(false)]
+        [DisplayName("Sıra No")]
+        public int? LineNr { get; set; }
+
         [DisplayName("Model Adı")]
         public string? AiModelName { get; set; }
 
+        [Editable(false)]
         [DisplayName("Model Açıklama")]
         public string? AiModelDesc { get; set; }
 

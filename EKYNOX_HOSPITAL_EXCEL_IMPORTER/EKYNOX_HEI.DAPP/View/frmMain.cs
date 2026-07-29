@@ -3,7 +3,9 @@ using DevExpress.XtraBars.Helpers;
 using DevExpress.XtraEditors;
 using DevExpress.XtraSplashScreen;
 using EKYNOX_HEI.DAPP.Controller;
+using EKYNOX_HEI.DAPP.View.AISetting;
 using EKYNOX_HEI.DATA.Database;
+using EKYNOX_HEI.DATA.DataModel.Common;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -20,12 +22,13 @@ namespace EKYNOX_HEI.DAPP.View
     {
         private readonly DatabaseContext context;
         private readonly IServiceProvider serviceProvider;
-
-        public frmMain(IServiceProvider serviceProvider, DatabaseContext _context)
+        private readonly UserInfoSet userInfo;
+        public frmMain(IServiceProvider serviceProvider, DatabaseContext _context, UserInfoSet _userInfo)
         {
             InitializeComponent();
             this.serviceProvider = serviceProvider;
             this.context = _context;
+            this.userInfo = _userInfo;
         }
 
         private static void OpenForm(Form form, bool showDialog = false, bool isChildForm = true)
@@ -58,7 +61,7 @@ namespace EKYNOX_HEI.DAPP.View
 
         private void btnUsers_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (clsMain.userInfo.Role == CORE.Enums.RoleEnum.User)
+            if (userInfo.Role == CORE.Enums.RoleEnum.User)
             {
                 MessageBox.Show("Giriş yetkiniz bulunmamaktadır.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
@@ -100,7 +103,8 @@ namespace EKYNOX_HEI.DAPP.View
 
         private void barButtonItem1_ItemClick_1(object sender, ItemClickEventArgs e)
         {
-            new frmAIChat().ShowDialog();
+            var frm = serviceProvider.GetRequiredService<frmAISettingList>();
+            OpenForm(frm);
         }
     }
 }
