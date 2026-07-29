@@ -39,14 +39,14 @@
             emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
             layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             pmGrid = new DevExpress.XtraBars.PopupMenu(components);
+            bbtnAdd = new DevExpress.XtraBars.BarButtonItem();
+            bbtnUpdate = new DevExpress.XtraBars.BarButtonItem();
+            bbtnDelete = new DevExpress.XtraBars.BarButtonItem();
             bmGrid = new DevExpress.XtraBars.BarManager(components);
             barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            bbtnAdd = new DevExpress.XtraBars.BarButtonItem();
-            bbtnUpdate = new DevExpress.XtraBars.BarButtonItem();
-            bbtnDelete = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)layoutControl1).BeginInit();
             layoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)grdList).BeginInit();
@@ -86,6 +86,7 @@
             grvList.GridControl = grdList;
             grvList.Name = "grvList";
             grvList.OptionsView.ShowGroupPanel = false;
+            grvList.MouseDown += grvList_MouseDown;
             // 
             // btnClose
             // 
@@ -136,6 +137,27 @@
             pmGrid.Manager = bmGrid;
             pmGrid.Name = "pmGrid";
             // 
+            // bbtnAdd
+            // 
+            bbtnAdd.Caption = "Ekle";
+            bbtnAdd.Id = 0;
+            bbtnAdd.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("bbtnAdd.ImageOptions.SvgImage");
+            bbtnAdd.Name = "bbtnAdd";
+            // 
+            // bbtnUpdate
+            // 
+            bbtnUpdate.Caption = "Güncelle";
+            bbtnUpdate.Id = 1;
+            bbtnUpdate.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("bbtnUpdate.ImageOptions.SvgImage");
+            bbtnUpdate.Name = "bbtnUpdate";
+            // 
+            // bbtnDelete
+            // 
+            bbtnDelete.Caption = "Sil";
+            bbtnDelete.Id = 2;
+            bbtnDelete.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("bbtnDelete.ImageOptions.SvgImage");
+            bbtnDelete.Name = "bbtnDelete";
+            // 
             // bmGrid
             // 
             bmGrid.DockControls.Add(barDockControlTop);
@@ -179,27 +201,6 @@
             barDockControlRight.Manager = bmGrid;
             barDockControlRight.Size = new Size(0, 586);
             // 
-            // bbtnAdd
-            // 
-            bbtnAdd.Caption = "Ekle";
-            bbtnAdd.Id = 0;
-            bbtnAdd.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("bbtnAdd.ImageOptions.SvgImage");
-            bbtnAdd.Name = "bbtnAdd";
-            // 
-            // bbtnUpdate
-            // 
-            bbtnUpdate.Caption = "Güncelle";
-            bbtnUpdate.Id = 1;
-            bbtnUpdate.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("bbtnUpdate.ImageOptions.SvgImage");
-            bbtnUpdate.Name = "bbtnUpdate";
-            // 
-            // bbtnDelete
-            // 
-            bbtnDelete.Caption = "Sil";
-            bbtnDelete.Id = 2;
-            bbtnDelete.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("bbtnDelete.ImageOptions.SvgImage");
-            bbtnDelete.Name = "bbtnDelete";
-            // 
             // frmAISettingList
             // 
             AutoScaleDimensions = new SizeF(6F, 13F);
@@ -212,6 +213,7 @@
             Controls.Add(barDockControlTop);
             Name = "frmAISettingList";
             Text = "AI Listesi";
+            Load += frmAISettingList_Load;
             ((System.ComponentModel.ISupportInitialize)layoutControl1).EndInit();
             layoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)grdList).EndInit();

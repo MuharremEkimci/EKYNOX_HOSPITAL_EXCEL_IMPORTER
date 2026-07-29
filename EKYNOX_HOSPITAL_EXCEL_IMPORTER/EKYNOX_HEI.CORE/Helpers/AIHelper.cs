@@ -7,15 +7,8 @@ namespace EKYNOX_HEI.CORE.Helpers
 {
     public class AIHelper
     {
-        private readonly string apiKey;
-
-        public AIHelper(string _apiKey)
-        {
-            apiKey = _apiKey;
-        }
-
         [Display(Name = "Method", Description = "Gemini AI Methodu")]
-        public async Task<ReturnData<string>> GeminiAIQuestion(string prompt, dynamic data, bool blImageUsing = false, bool blAnswerJsonTrigger = false)
+        public async Task<ReturnData<string>> GeminiAIQuestion(string apiKey, string prompt, dynamic data, bool blImageUsing = false, bool blAnswerJsonTrigger = false)
         {
             var result = new ReturnData<string>();
 

@@ -16,14 +16,15 @@ namespace EKYNOX_HEI.DAPP.View
         public string aiModel;
         public string endpoint;
         public AIEnum aiType;
+        IChatClient chatClient;
 
         public frmAIChat()
         {
-
             InitializeComponent();
+        }
 
-            IChatClient chatClient;
-
+        private async void frmAIChat_Load(object sender, EventArgs e)
+        {
             switch (aiType)
             {
                 case AIEnum.Gemini:
@@ -36,7 +37,7 @@ namespace EKYNOX_HEI.DAPP.View
                     DevExpress.AIIntegration.AIExtensionsContainerDesktop.Default.RegisterChatClient(chatClient);
                     break;
                 case AIEnum.AzureAI:
-                    chatClient = 
+                    chatClient =
                     new AzureOpenAIClient
                     (
                         new Uri(endpoint),
@@ -57,9 +58,10 @@ namespace EKYNOX_HEI.DAPP.View
             this.Controls.Add(chatControl);
         }
 
-        private async void frmAIChat_Load(object sender, EventArgs e)
+        private void frmAIChat_FormClosed(object sender, FormClosedEventArgs e)
         {
-
+            AIExtensionsContainerDesktop.Default.UnregisterChatClient();
+            chatClient = null;
         }
     }
 }

@@ -9,6 +9,5 @@ namespace EKYNOX_HEI.DAPP.Controller
 {
     public class clsMain
     {
-        public static UsersLoginModel userInfo { get; set; } = new UsersLoginModel();
     }
 }

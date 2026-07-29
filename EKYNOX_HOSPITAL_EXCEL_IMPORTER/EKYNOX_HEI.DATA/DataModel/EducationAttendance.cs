@@ -1,4 +1,5 @@
 ﻿using EKYNOX_HEI.CORE.Enums;
+using EKYNOX_HEI.DATA.DataModel.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace EKYNOX_HEI.DATA.DataModel
 {
-    public class EducationAttendance
+    public class EducationAttendance : RowInfoModel
     {
         public int LOGICALREF { get; set; }        
         public string? DOCNO { get; set; }
@@ -15,7 +16,7 @@ namespace EKYNOX_HEI.DATA.DataModel
         public EducationStatusEnum EDUCATIONSTATUS { get; set; }
     }
 
-    public class EducationAttendanceDetail
+    public class EducationAttendanceDetail : RowInfoModel
     {
         public int LOGICALREF { get; set; }
         public int EDUCATIONATTENDANCEREF { get; set; }
@@ -29,7 +30,7 @@ namespace EKYNOX_HEI.DATA.DataModel
         public ReadAndExcelProcessEnum READANDEXCELPROCESS { get; set; }
     }
 
-    public class EducationAttendanceFileRead
+    public class EducationAttendanceFileRead : RowInfoModel
     {
         public int LOGICALREF { get; set; }
         public int EDUCATIONATTENDANCEDETAILREF { get; set; }

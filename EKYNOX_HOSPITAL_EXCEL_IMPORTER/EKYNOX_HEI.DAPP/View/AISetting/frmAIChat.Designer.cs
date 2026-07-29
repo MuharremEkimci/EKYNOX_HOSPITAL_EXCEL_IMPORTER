@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAIChat));
             SuspendLayout();
             // 
             // frmAIChat
@@ -35,8 +36,11 @@
             AutoScaleDimensions = new SizeF(6F, 13F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(561, 524);
+            IconOptions.Image = (Image)resources.GetObject("frmAIChat.IconOptions.Image");
             Name = "frmAIChat";
-            Text = "frmsdas";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "AI Chat";
+            FormClosed += frmAIChat_FormClosed;
             Load += frmAIChat_Load;
             ResumeLayout(false);
         }

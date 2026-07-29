@@ -1,10 +1,11 @@
-﻿using System;
+﻿using EKYNOX_HEI.DATA.DataModel.Common;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace EKYNOX_HEI.DATA.DataModel
 {
-    public class Institutions
+    public class Institutions : RowInfoModel
     {
         public int LOGICALREF { get; set; }
         public string? CODE { get; set; }
