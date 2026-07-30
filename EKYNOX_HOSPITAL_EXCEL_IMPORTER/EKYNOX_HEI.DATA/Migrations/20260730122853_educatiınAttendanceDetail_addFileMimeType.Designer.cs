@@ -3,6 +3,7 @@ using System;
 using EKYNOX_HEI.DATA.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EKYNOX_HEI.DATA.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260730122853_educatiınAttendanceDetail_addFileMimeType")]
+    partial class educatiınAttendanceDetail_addFileMimeType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.10");
@@ -92,9 +95,6 @@ namespace EKYNOX_HEI.DATA.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MODIFIEDUSER")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("USEINTHEMETHOD")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("LOGICALREF");

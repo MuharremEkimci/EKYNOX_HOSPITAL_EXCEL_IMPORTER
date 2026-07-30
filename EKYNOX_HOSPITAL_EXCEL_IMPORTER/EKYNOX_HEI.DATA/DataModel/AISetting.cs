@@ -24,5 +24,6 @@ namespace EKYNOX_HEI.DATA.DataModel
         public int LINENR { get; set; }
         public string? AIMODELNAME { get; set; }
         public string? AIMODELDESC { get; set; }
+        public bool USEINTHEMETHOD { get; set; }
     }
 }

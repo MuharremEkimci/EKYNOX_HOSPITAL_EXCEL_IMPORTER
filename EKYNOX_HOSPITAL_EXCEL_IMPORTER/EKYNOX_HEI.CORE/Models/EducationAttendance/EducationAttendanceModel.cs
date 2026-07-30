@@ -70,6 +70,7 @@ namespace EKYNOX_HEI.CORE.Models.EducationAttendance
         [Browsable(false)]
         public int LogicalRef { get; set; }
 
+        [Editable(false)]
         [DisplayName("Sıra No")]
         public int ClassNo { get; set; }
 

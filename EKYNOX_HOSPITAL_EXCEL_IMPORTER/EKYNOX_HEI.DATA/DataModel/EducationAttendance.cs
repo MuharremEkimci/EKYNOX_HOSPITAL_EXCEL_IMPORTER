@@ -22,6 +22,7 @@ namespace EKYNOX_HEI.DATA.DataModel
         public int EDUCATIONATTENDANCEREF { get; set; }
         public string? FILENAME { get; set; }
         public string? FILEPATH { get; set; }
+        public string? FILEMIMETYPE { get; set; }
         public byte[]? FILEDATA { get; set; }
         public DateTime EDUCATIONDATE { get; set; }
         public EducationTypeEnum EDUCATIONTYPE { get; set; }

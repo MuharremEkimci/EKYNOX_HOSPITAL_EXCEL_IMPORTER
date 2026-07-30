@@ -18,6 +18,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text.Json;
 using static DevExpress.DataProcessing.InMemoryDataProcessor.AddSurrogateOperationAlgorithm;
@@ -44,7 +45,7 @@ namespace EKYNOX_HEI.DAPP.View.AISetting
 
         private void frmAISetting_Load(object sender, EventArgs e)
         {
-            
+
             lueAI.Properties.DataSource = EnumHelper.GetDisplayValues(typeof(AIEnum));
             lueAI.Properties.ValueMember = "Id";
             lueAI.Properties.DisplayMember = "Name";
@@ -62,21 +63,11 @@ namespace EKYNOX_HEI.DAPP.View.AISetting
                               Name = c.GetCustomAttribute<DisplayAttribute>()!.Description,
                           }).ToList();
 
-            //       var method = typeof(AIHelper)
-            //.GetMethod(methods.FirstOrDefault().Method, BindingFlags.Instance | BindingFlags.Public);
-
-            //       if (method != null)
-            //       {
-            //           AIHelper helper = new AIHelper();
-
-            //           var result = method.Invoke(helper, new object[] { "AIzaSyAaEnYOkEPAvqysMM6HkhaE6l8HJBPJ7UU", "", new { }, false, false} );
-            //       }
-
             lueMethod.Properties.DataSource = methods;
             lueMethod.Properties.ValueMember = "Method";
             lueMethod.Properties.DisplayMember = "Name";
 
-            lueAIUsingStatus.EditValue = AIEnumUsingStatus.NotUsing.GetHashCode();
+            lueAIUsingStatus.EditValue = AIEnumUsingStatus.Using.GetHashCode();
 
             if (listInfo.LogicalRef > 0)
             {
@@ -100,7 +91,7 @@ namespace EKYNOX_HEI.DAPP.View.AISetting
                 lueAI.EditValue = resData.Ai.GetHashCode();
                 lueAIUsingStatus.EditValue = resData.UsingStatus.GetHashCode();
                 lueMethod.EditValue = resData.MethodName;
-                teApiKey.Text = resData.ApiKey;                
+                teApiKey.Text = resData.ApiKey;
                 SetAIModels();
                 aiSetting.Detail = resData.Detail;
 
@@ -111,7 +102,7 @@ namespace EKYNOX_HEI.DAPP.View.AISetting
             {
                 teNo.Text = AISettingService.CreateAINo().Data;
             }
-            
+
             grdList.DataSource = aiSettingList;
             grvList.Columns["AiModelName"].ColumnEdit = repSlueAIModels;
             grvList.Columns["AiModelDesc"].ColumnEdit = repSlueAIModelsDesc;
@@ -144,53 +135,60 @@ namespace EKYNOX_HEI.DAPP.View.AISetting
                 dt.Columns.Add("Description", typeof(string));
                 dt.Columns.Add("DisplayName", typeof(string));
 
-                try
+
+                switch ((AIEnum)lueAI.EditValue)
                 {
-                    switch ((AIEnum)lueAI.EditValue)
-                    {
-                        case AIEnum.Gemini:
-                            var googleAI = new Client(apiKey: teApiKey.Text);
-                            var aiModels = await googleAI.Models.ListAsync();
-                            var aiList = await aiModels.Select(c => new { Name = c.Name, Description = c.Description, DisplayName = c.DisplayName }).ToListAsync();
+                    case AIEnum.Gemini:
+                        var googleAI = new Client(apiKey: teApiKey.Text);
+                        var aiModels = await googleAI.Models.ListAsync();
+                        var aiList = await aiModels.Select(c => new { Name = c.Name, Description = c.Description, DisplayName = c.DisplayName }).ToListAsync();
 
-                            foreach (var c in aiList)
-                                dt.Rows.Add(c.Name, c.Description, c.DisplayName);
+                        foreach (var c in aiList)
+                            dt.Rows.Add(c.Name, c.Description, c.DisplayName);
 
-                            break;
-                        case AIEnum.AzureAI:
-                            string endpoint = teEndPoint.Text;
-                            string apiKey = teApiKey.Text;
-                            string apiVersion = "2024-10-21";
+                        break;
+                    case AIEnum.AzureAI:
 
-                           var httpClient = new HttpClient();
-                            httpClient.DefaultRequestHeaders.Add("api-key", apiKey);
+                        string endpoint = teEndPoint.Text;
+                        string apiKey = teApiKey.Text;
+                        string apiVersion = "2024-10-21";
 
-                            var response = await httpClient.GetAsync($"{endpoint}/openai/models?api-version={apiVersion}");
+                        var res = await AISettingService.GetAIModelRequest(AIEnum.AzureAI,$"{endpoint}/openai/models?api-version={apiVersion}", apiKey);
+                        if (res.Status == StatusEnum.Error)
+                        {
+                            MessageBox.Show("Model bilgileri getirilirken hata oluştu. Api Key bilginizi doğru girdiğinizden emin olunuz.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
 
-                            if (!response.IsSuccessStatusCode)
-                            {
-                                string error = await response.Content.ReadAsStringAsync();
-                                throw new Exception($"Hata: {response.StatusCode} - {error}");
-                            }
+                        foreach (var model in res.Data.RootElement.GetProperty("data").EnumerateArray())
+                        {
+                            string id = model.GetProperty("id").GetString();
+                            dt.Rows.Add(id, id, id);
+                        }
 
-                            var json = await response.Content.ReadAsStringAsync();
-                            var doc = JsonDocument.Parse(json);
+                        break;
 
-                            foreach (var model in doc.RootElement.GetProperty("data").EnumerateArray())
-                            {
-                                string id = model.GetProperty("id").GetString();
-                                dt.Rows.Add(id, id, id);
-                            }
+                    case AIEnum.Groq:
+                        apiKey = teApiKey.Text;
+                        endpoint = teEndPoint.Text;
 
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Model bilgileri getirilirken hata oluştu. Api Key bilginizi doğru girdiğinizden emin olunuz.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                        res = await AISettingService.GetAIModelRequest(AIEnum.Groq, $"{endpoint}/models", apiKey);
+                        if (res.Status == StatusEnum.Error)
+                        {
+                            MessageBox.Show("Model bilgileri getirilirken hata oluştu. Api Key bilginizi doğru girdiğinizden emin olunuz.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        foreach (var model in res.Data.RootElement.GetProperty("data").EnumerateArray())
+                        {
+                            string id = model.GetProperty("id").GetString();
+                            string ownedBy = model.GetProperty("owned_by").GetString();
+                            dt.Rows.Add(id, ownedBy, ownedBy);
+                        }
+
+                        break;
+                    default:
+                        break;
                 }
 
                 repSlueAIModels.DataSource = dt;
@@ -234,7 +232,7 @@ namespace EKYNOX_HEI.DAPP.View.AISetting
 
             SetAIModels();
 
-            if (!string.IsNullOrEmpty(lueAI.EditValue?.ToString()) && (AIEnum)lueAI.EditValue == AIEnum.AzureAI)
+            if (!string.IsNullOrEmpty(lueAI.EditValue?.ToString()) && ((AIEnum)lueAI.EditValue is AIEnum.AzureAI or AIEnum.Groq))
             {
                 lueEndpoint.Visibility = DevExpress.XtraLayout.Utils.LayoutVisibility.Always;
             }
@@ -311,8 +309,8 @@ namespace EKYNOX_HEI.DAPP.View.AISetting
                 if (string.IsNullOrEmpty(lueMethod.EditValue?.ToString()))
                     throw new Exception("Uygulama içi işlem yapacak method seçilmelidir.");
 
-                if ((AIEnum)lueAI.EditValue == AIEnum.AzureAI && string.IsNullOrEmpty(teEndPoint.Text))
-                    throw new Exception("Yapay zeka AzureAI seçildiğinde endpoint girilmesi zorunludur.");
+                if (((AIEnum)lueAI.EditValue is AIEnum.AzureAI or AIEnum.Groq) && string.IsNullOrEmpty(teEndPoint.Text))
+                    throw new Exception("Yapay zeka AzureAI veya Groq seçildiğinde endpoint girilmesi zorunludur.");
 
                 if (!aiSettingList.Any())
                     throw new Exception("Model listesinde giriş yapılmalıdır.");
@@ -357,14 +355,14 @@ namespace EKYNOX_HEI.DAPP.View.AISetting
                 if (rowHandle >= 0 && MessageBox.Show("Satır Silinecektir.", "Uyarı", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     grvList.DeleteRow(rowHandle);
-                    
+
                     grdList.RefreshDataSource();
                     grvList.RefreshData();
                     e.Handled = true;
 
 
-                   aiSettingList.OrderBy(c => c.LineNr).ToList().ForEach(c => c.LineNr = aiSettingList.ToList().IndexOf(c) + 1);
-                 
+                    aiSettingList.OrderBy(c => c.LineNr).ToList().ForEach(c => c.LineNr = aiSettingList.ToList().IndexOf(c) + 1);
+
                 }
             }
         }
