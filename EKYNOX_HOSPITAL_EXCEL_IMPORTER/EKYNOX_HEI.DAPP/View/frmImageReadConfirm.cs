@@ -2,11 +2,15 @@
 using EKYNOX_HEI.CORE.Enums;
 using EKYNOX_HEI.CORE.Helpers;
 using EKYNOX_HEI.CORE.Models.EducationAttendance;
+using EKYNOX_HEI.DAPP.Controller;
+using GenerativeAI.Types;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -16,11 +20,13 @@ namespace EKYNOX_HEI.DAPP.View
     public partial class frmImageReadConfirm : DevExpress.XtraEditors.XtraForm
     {
         public EducationAttendanceListModel imageInfo;
+        private readonly clsEducationAttendance educationAttendanceService;
 
-        public frmImageReadConfirm()
+        public frmImageReadConfirm(clsEducationAttendance _educationAttendanceService)
         {
             InitializeComponent();
             imageInfo = new EducationAttendanceListModel();
+            educationAttendanceService = _educationAttendanceService;
         }
 
         private async void frmImageReadConfirm_Load(object sender, EventArgs e)
@@ -39,7 +45,6 @@ namespace EKYNOX_HEI.DAPP.View
             seEducationNumber.EditValue = imageInfo.EducationNumber;
             peMain.Image = Image.FromStream(new System.IO.MemoryStream(imageInfo.FileData));
 
-            grdImageReadList.DataSource = imageInfo.Detail;
 
             //var ocrApp = new HandWritingOcrApp("https://readpaper.cognitiveservices.azure.com/", "9BAfnhkgsEGAAgmcpur4JZREmllvBUjx36a5lUu78EvcHTagoNolJQQJ99CGACYeBjFXJ3w3AAAFACOGTvuZ");
             //var dsd = ocrApp.OcrProcess(imageInfo.FileData);
@@ -68,30 +73,25 @@ namespace EKYNOX_HEI.DAPP.View
             //                   ]
             //                 }}";
 
-            string prompt = @"Sen profesyonel bir optik karakter tanıma (OCR) asistanısın. 
-            Görseldeki el yazısı katılım listesini incele ve katılan kişilerin ad ve soyadlarını ayıkla.
-            
-            GÖREVLER VE KURALLAR:
-            1. Görseldeki el yazılarını azami dikkatle oku ve doğru tahmin et.
-            2. SADECE kişilerin İSİM ve SOYİSİMLERİNİ al. Tablodaki Birim (Hostes, Vezne vb.), Tarih, Döküman No ve İmza alanlarını KESİNLİKLE dahil etme.
-            3. İsim ve soyisimleri Türkçe karakter kurallarına uygun olarak TÜMÜ BÜYÜK HARFLERLE yaz (Örn: İSMEK -> İSMEK, ı -> I).
-            4. İsim ve soyisimi ayrıştırarak şablona yerleştir.
-            
-            HEDEF JSON ŞEMASI:
+            var res = await educationAttendanceService.GetImageReadAI(imageInfo.FileData, imageInfo.FileMimeType);
+            if (res.Status == StatusEnum.Warning)
             {
-              ""participants"": [
-                {
-                  ""class_no"": 1,
-                  ""name"": ""MUSA"",
-                  ""surname"": ""TUNÇ""
-                }
-              ]
-            }";
+                MessageBox.Show(res.Message, "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                this.Close();
+                return;
+            }
 
-            //var aiApp = new AIHelper("AIzaSyAaEnYOkEPAvqysMM6HkhaE6l8HJBPJ7UU");
-            //var result = await aiApp.GeminiAIQuestion(prompt, new { aiModelNames = new List<string>(), imageBytes = imageInfo.FileData, imageMimeType = imageInfo.FileMimeType }, true , true);
-            //var sdasd = result.Data;
-            
+            if (res.Status == StatusEnum.Error)
+            {
+                MessageBox.Show("Yapay zeka işleminde hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AppLogger.Error(DateTime.Now, nameof(frmImageReadConfirm), nameof(frmImageReadConfirm_Load), nameof(educationAttendanceService.GetImageReadAI), res.Message);
+                this.Close();
+                return;
+            }
+
+            imageInfo.Detail = res.Data;
+            grdImageReadList.DataSource = imageInfo.Detail;
+            grvImageReadList.Columns["ClassNo"].Width = 45;
         }
 
         private void btnConfirm_Click(object sender, EventArgs e)
@@ -106,10 +106,16 @@ namespace EKYNOX_HEI.DAPP.View
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("İşlemden Vazgeçilecektir.","Uyarı", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            if (MessageBox.Show("İşlemden Vazgeçilecektir.", "Uyarı", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
                 this.DialogResult = DialogResult.Cancel;
             }
+        }
+
+        private void grvImageReadList_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
+        {
+            if (e.Column.FieldName == "Name" || e.Column.FieldName == "Surname")
+                grvImageReadList.SetRowCellValue(e.RowHandle, e.Column, ((string)e.Value).ToUpper(new CultureInfo("tr-TR")));
         }
     }
 }

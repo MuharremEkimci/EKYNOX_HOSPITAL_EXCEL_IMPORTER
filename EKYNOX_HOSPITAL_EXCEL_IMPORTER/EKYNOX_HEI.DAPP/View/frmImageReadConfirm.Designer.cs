@@ -147,6 +147,7 @@
             grvImageReadList.GridControl = grdImageReadList;
             grvImageReadList.Name = "grvImageReadList";
             grvImageReadList.OptionsView.ShowGroupPanel = false;
+            grvImageReadList.CellValueChanged += grvImageReadList_CellValueChanged;
             // 
             // grdExcelList
             // 
@@ -222,7 +223,13 @@
             // 
             peMain.Location = new Point(2, 2);
             peMain.Name = "peMain";
+            peMain.Properties.AllowScrollOnMouseWheel = DevExpress.Utils.DefaultBoolean.True;
+            peMain.Properties.AllowScrollViaMouseDrag = true;
+            peMain.Properties.AllowZoom = DevExpress.Utils.DefaultBoolean.True;
             peMain.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
+            peMain.Properties.ShowScrollBars = true;
+            peMain.Properties.ShowZoomSubMenu = DevExpress.Utils.DefaultBoolean.True;
+            peMain.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             peMain.Size = new Size(472, 627);
             peMain.StyleController = layoutControl2;
             peMain.TabIndex = 4;

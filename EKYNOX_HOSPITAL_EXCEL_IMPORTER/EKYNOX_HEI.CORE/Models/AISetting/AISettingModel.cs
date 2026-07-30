@@ -40,6 +40,9 @@ namespace EKYNOX_HEI.CORE.Models.AISetting
         [DisplayName("Model Açıklama")]
         public string? AiModelDesc { get; set; }
 
+        [DisplayName("Seçilen Methodda Modeli Kullan")]
+        public bool UseInTheMethod { get; set; }
+
         [DisplayName("Model Test")]
         public string? AiModelTest { get; set; }
     }

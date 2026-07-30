@@ -5,10 +5,14 @@ using EKYNOX_HEI.CORE.Models.AISetting;
 using EKYNOX_HEI.DATA.Database;
 using EKYNOX_HEI.DATA.DataModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 
 namespace EKYNOX_HEI.DAPP.Controller
 {
@@ -69,6 +73,7 @@ namespace EKYNOX_HEI.DAPP.Controller
                     AiModelName = c.AIMODELNAME,
                     AISettingRef = c.AISETTINGREF,
                     LogicalRef = c.LOGICALREF,
+                    UseInTheMethod = c.USEINTHEMETHOD,
                     LineNr = c.LINENR
                 }).ToList();
 
@@ -215,6 +220,43 @@ namespace EKYNOX_HEI.DAPP.Controller
                 result.Message = ex.Message;
             }
 
+            return result;
+        }
+
+        public async Task<ReturnData<JsonDocument>> GetAIModelRequest(AIEnum aiEnum,string url, string apikey) 
+        {
+            var result = new ReturnData<JsonDocument>();
+
+            try
+            {
+                var httpClient = new HttpClient();
+
+                if (aiEnum == AIEnum.AzureAI)
+                {
+                    httpClient.DefaultRequestHeaders.Add("api-key", apikey);
+                }
+                else if (aiEnum == AIEnum.Groq)
+                {
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apikey);
+                }
+
+                var response = await httpClient.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    string error = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Hata: {response.StatusCode} - {error}");
+                }
+
+                var json = await response.Content.ReadAsStringAsync();
+                result.Data = JsonDocument.Parse(json);
+            }
+            catch (Exception ex)
+            {
+                result.Status = StatusEnum.Error;
+                result.Message = ex.Message;
+            }
+        
             return result;
         }
     }
