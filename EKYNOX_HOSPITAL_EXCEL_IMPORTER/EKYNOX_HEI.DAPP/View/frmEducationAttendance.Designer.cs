@@ -119,7 +119,7 @@
             layoutControl1.Name = "layoutControl1";
             layoutControl1.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new Rectangle(2396, 328, 650, 400);
             layoutControl1.Root = Root;
-            layoutControl1.Size = new Size(689, 774);
+            layoutControl1.Size = new Size(678, 774);
             layoutControl1.TabIndex = 0;
             layoutControl1.Text = "layoutControl1";
             // 
@@ -129,7 +129,7 @@
             grdList.MainView = grvList;
             grdList.Name = "grdList";
             grdList.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { repDeDate });
-            grdList.Size = new Size(679, 522);
+            grdList.Size = new Size(668, 522);
             grdList.TabIndex = 6;
             grdList.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { grvList });
             // 
@@ -152,7 +152,7 @@
             // btnClose
             // 
             btnClose.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("btnClose.ImageOptions.SvgImage");
-            btnClose.Location = new Point(588, 736);
+            btnClose.Location = new Point(577, 736);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(99, 36);
             btnClose.StyleController = layoutControl1;
@@ -163,7 +163,7 @@
             // btnSave
             // 
             btnSave.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("btnSave.ImageOptions.SvgImage");
-            btnSave.Location = new Point(485, 736);
+            btnSave.Location = new Point(474, 736);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(99, 36);
             btnSave.StyleController = layoutControl1;
@@ -177,7 +177,7 @@
             teDocNo.Name = "teDocNo";
             teDocNo.Properties.ReadOnly = true;
             teDocNo.Properties.UseReadOnlyAppearance = false;
-            teDocNo.Size = new Size(227, 20);
+            teDocNo.Size = new Size(222, 20);
             teDocNo.StyleController = layoutControl1;
             teDocNo.TabIndex = 0;
             // 
@@ -187,7 +187,7 @@
             beFileSelect.Name = "beFileSelect";
             beFileSelect.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton() });
             beFileSelect.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            beFileSelect.Size = new Size(607, 20);
+            beFileSelect.Size = new Size(596, 20);
             beFileSelect.StyleController = layoutControl1;
             beFileSelect.TabIndex = 4;
             beFileSelect.ButtonClick += btnFileSelect_ButtonClick;
@@ -198,7 +198,7 @@
             btnReadImages.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("btnReadImages.ImageOptions.SvgImage");
             btnReadImages.Location = new Point(5, 167);
             btnReadImages.Name = "btnReadImages";
-            btnReadImages.Size = new Size(679, 36);
+            btnReadImages.Size = new Size(668, 36);
             btnReadImages.StyleController = layoutControl1;
             btnReadImages.TabIndex = 5;
             btnReadImages.Text = "Yüklenen Görüntüleri Oku ve Doğrula";
@@ -211,7 +211,7 @@
             slueEducator.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
             slueEducator.Properties.NullText = "";
             slueEducator.Properties.PopupView = searchLookUpEdit1View;
-            slueEducator.Size = new Size(227, 20);
+            slueEducator.Size = new Size(222, 20);
             slueEducator.StyleController = layoutControl1;
             slueEducator.TabIndex = 2;
             // 
@@ -246,7 +246,7 @@
             slueInstitutions.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
             slueInstitutions.Properties.NullText = "";
             slueInstitutions.Properties.PopupView = gridView1;
-            slueInstitutions.Size = new Size(227, 20);
+            slueInstitutions.Size = new Size(222, 20);
             slueInstitutions.StyleController = layoutControl1;
             slueInstitutions.TabIndex = 3;
             // 
@@ -280,19 +280,19 @@
             Root.GroupBordersVisible = false;
             Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { emptySpaceItem1, layoutControlItem3, layoutControlItem4, layoutControlGroup4, layoutControlGroup6 });
             Root.Name = "Root";
-            Root.Size = new Size(689, 774);
+            Root.Size = new Size(678, 774);
             Root.TextVisible = false;
             // 
             // emptySpaceItem1
             // 
             emptySpaceItem1.Location = new Point(0, 734);
             emptySpaceItem1.Name = "emptySpaceItem1";
-            emptySpaceItem1.Size = new Size(483, 40);
+            emptySpaceItem1.Size = new Size(472, 40);
             // 
             // layoutControlItem3
             // 
             layoutControlItem3.Control = btnClose;
-            layoutControlItem3.Location = new Point(586, 734);
+            layoutControlItem3.Location = new Point(575, 734);
             layoutControlItem3.Name = "layoutControlItem3";
             layoutControlItem3.Size = new Size(103, 40);
             layoutControlItem3.TextVisible = false;
@@ -300,7 +300,7 @@
             // layoutControlItem4
             // 
             layoutControlItem4.Control = btnSave;
-            layoutControlItem4.Location = new Point(483, 734);
+            layoutControlItem4.Location = new Point(472, 734);
             layoutControlItem4.Name = "layoutControlItem4";
             layoutControlItem4.Size = new Size(103, 40);
             layoutControlItem4.TextVisible = false;
@@ -310,7 +310,7 @@
             layoutControlGroup4.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutControlItem6, layoutControlItem5, emptySpaceItem2, layoutControlItem8 });
             layoutControlGroup4.Location = new Point(0, 0);
             layoutControlGroup4.Name = "layoutControlGroup4";
-            layoutControlGroup4.Size = new Size(689, 117);
+            layoutControlGroup4.Size = new Size(678, 117);
             layoutControlGroup4.Text = "Eğitim Katılım Genel Bilgiler";
             // 
             // layoutControlItem6
@@ -318,7 +318,7 @@
             layoutControlItem6.Control = slueInstitutions;
             layoutControlItem6.Location = new Point(0, 48);
             layoutControlItem6.Name = "layoutControlItem6";
-            layoutControlItem6.Size = new Size(303, 24);
+            layoutControlItem6.Size = new Size(298, 24);
             layoutControlItem6.Text = "Kurum";
             layoutControlItem6.TextSize = new Size(60, 13);
             // 
@@ -327,22 +327,22 @@
             layoutControlItem5.Control = teDocNo;
             layoutControlItem5.Location = new Point(0, 0);
             layoutControlItem5.Name = "layoutControlItem5";
-            layoutControlItem5.Size = new Size(303, 24);
+            layoutControlItem5.Size = new Size(298, 24);
             layoutControlItem5.Text = "Döküman No";
             layoutControlItem5.TextSize = new Size(60, 13);
             // 
             // emptySpaceItem2
             // 
-            emptySpaceItem2.Location = new Point(303, 0);
+            emptySpaceItem2.Location = new Point(298, 0);
             emptySpaceItem2.Name = "emptySpaceItem2";
-            emptySpaceItem2.Size = new Size(362, 72);
+            emptySpaceItem2.Size = new Size(356, 72);
             // 
             // layoutControlItem8
             // 
             layoutControlItem8.Control = slueEducator;
             layoutControlItem8.Location = new Point(0, 24);
             layoutControlItem8.Name = "layoutControlItem8";
-            layoutControlItem8.Size = new Size(303, 24);
+            layoutControlItem8.Size = new Size(298, 24);
             layoutControlItem8.Text = "Eğitmen";
             layoutControlItem8.TextSize = new Size(60, 13);
             // 
@@ -352,7 +352,7 @@
             layoutControlGroup6.Location = new Point(0, 117);
             layoutControlGroup6.Name = "layoutControlGroup6";
             layoutControlGroup6.Padding = new DevExpress.XtraLayout.Utils.Padding(0, 0, 0, 0);
-            layoutControlGroup6.Size = new Size(689, 617);
+            layoutControlGroup6.Size = new Size(678, 617);
             layoutControlGroup6.Text = "Görüntü Listesi";
             // 
             // layoutControlItem2
@@ -360,7 +360,7 @@
             layoutControlItem2.Control = grdList;
             layoutControlItem2.Location = new Point(0, 64);
             layoutControlItem2.Name = "layoutControlItem2";
-            layoutControlItem2.Size = new Size(683, 526);
+            layoutControlItem2.Size = new Size(672, 526);
             layoutControlItem2.TextVisible = false;
             // 
             // layoutControlItem12
@@ -368,7 +368,7 @@
             layoutControlItem12.Control = beFileSelect;
             layoutControlItem12.Location = new Point(0, 0);
             layoutControlItem12.Name = "layoutControlItem12";
-            layoutControlItem12.Size = new Size(683, 24);
+            layoutControlItem12.Size = new Size(672, 24);
             layoutControlItem12.Text = "Dosya Seç";
             layoutControlItem12.TextSize = new Size(60, 13);
             // 
@@ -377,7 +377,7 @@
             layoutControlItem1.Control = btnReadImages;
             layoutControlItem1.Location = new Point(0, 24);
             layoutControlItem1.Name = "layoutControlItem1";
-            layoutControlItem1.Size = new Size(683, 40);
+            layoutControlItem1.Size = new Size(672, 40);
             layoutControlItem1.TextVisible = false;
             // 
             // splitContainerControl1
@@ -396,7 +396,7 @@
             splitContainerControl1.Panel2.Controls.Add(layoutControl2);
             splitContainerControl1.Panel2.Text = "Panel2";
             splitContainerControl1.Size = new Size(1279, 774);
-            splitContainerControl1.SplitterPosition = 689;
+            splitContainerControl1.SplitterPosition = 678;
             splitContainerControl1.TabIndex = 11;
             // 
             // layoutControl2
@@ -407,7 +407,7 @@
             layoutControl2.Name = "layoutControl2";
             layoutControl2.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new Rectangle(2591, 383, 650, 400);
             layoutControl2.Root = layoutControlGroup3;
-            layoutControl2.Size = new Size(580, 774);
+            layoutControl2.Size = new Size(591, 774);
             layoutControl2.TabIndex = 0;
             layoutControl2.Text = "layoutControl2";
             // 
@@ -423,7 +423,7 @@
             peMain.Properties.ShowZoomSubMenu = DevExpress.Utils.DefaultBoolean.True;
             peMain.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             peMain.Properties.ZoomingOperationMode = DevExpress.XtraEditors.Repository.ZoomingOperationMode.MouseWheel;
-            peMain.Size = new Size(570, 743);
+            peMain.Size = new Size(581, 743);
             peMain.StyleController = layoutControl2;
             peMain.TabIndex = 12;
             // 
@@ -433,7 +433,7 @@
             layoutControlGroup3.GroupBordersVisible = false;
             layoutControlGroup3.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutControlGroup5 });
             layoutControlGroup3.Name = "Root";
-            layoutControlGroup3.Size = new Size(580, 774);
+            layoutControlGroup3.Size = new Size(591, 774);
             layoutControlGroup3.TextVisible = false;
             // 
             // layoutControlGroup5
@@ -442,7 +442,7 @@
             layoutControlGroup5.Location = new Point(0, 0);
             layoutControlGroup5.Name = "layoutControlGroup5";
             layoutControlGroup5.Padding = new DevExpress.XtraLayout.Utils.Padding(0, 0, 0, 0);
-            layoutControlGroup5.Size = new Size(580, 774);
+            layoutControlGroup5.Size = new Size(591, 774);
             layoutControlGroup5.Text = "Görüntü";
             // 
             // layoutControlItem9
@@ -450,7 +450,7 @@
             layoutControlItem9.Control = peMain;
             layoutControlItem9.Location = new Point(0, 0);
             layoutControlItem9.Name = "layoutControlItem9";
-            layoutControlItem9.Size = new Size(574, 747);
+            layoutControlItem9.Size = new Size(585, 747);
             layoutControlItem9.TextVisible = false;
             // 
             // frmEducationAttendance
@@ -459,6 +459,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1279, 774);
             Controls.Add(splitContainerControl1);
+            IconOptions.Image = (Image)resources.GetObject("frmEducationAttendance.IconOptions.Image");
             Name = "frmEducationAttendance";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Eğitim Katılım Form";

@@ -14,6 +14,7 @@ namespace EKYNOX_HEI.CORE.Models.EducationAttendance
         public string DocNo { get; set; }
         public int EducatorRef { get; set; }
         public int InstitutionRef { get; set; }
+        public byte[]? ExcelData { get; set; }
 
         public List<EducationAttendanceListModel> ImagesDetailList { get; set; }
         public EducationAttendanceModel() 
@@ -26,6 +27,9 @@ namespace EKYNOX_HEI.CORE.Models.EducationAttendance
     {
         [Browsable(false)]
         public int LogicalRef { get; set; }
+
+        [Browsable(false)]
+        public int EducationAttendanceRef { get; set; }
 
         [Browsable(false)]
         public string FileMimeType { get; set; }
@@ -69,6 +73,9 @@ namespace EKYNOX_HEI.CORE.Models.EducationAttendance
     {
         [Browsable(false)]
         public int LogicalRef { get; set; }
+
+        [Browsable(false)]
+        public int EducationAttendanceDetailRef { get; set; }
 
         [Editable(false)]
         [DisplayName("Sıra No")]

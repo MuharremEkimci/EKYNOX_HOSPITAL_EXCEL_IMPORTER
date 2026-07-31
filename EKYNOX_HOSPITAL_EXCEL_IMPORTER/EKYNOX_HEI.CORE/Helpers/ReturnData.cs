@@ -10,5 +10,7 @@ namespace EKYNOX_HEI.CORE.Helpers
         public T Data { get; set; }
         public StatusEnum Status { get; set; }
         public string Message { get; set; }
+
+        public ReturnData() => Status = StatusEnum.Success;
     }
 }

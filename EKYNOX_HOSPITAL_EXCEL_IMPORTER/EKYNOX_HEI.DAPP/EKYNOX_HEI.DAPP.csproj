@@ -18,7 +18,12 @@
 
 	  <StaticWebAssetsEnabled>true</StaticWebAssetsEnabled>
 	  <EnableDefaultRazorGenerateItems>true</EnableDefaultRazorGenerateItems>
+	  <ApplicationIcon>Logo.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Logo.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="16.2.0" />
@@ -32,6 +37,7 @@
     <PackageReference Include="DevExpress.AIIntegration.WinForms.Chat" Version="25.2.4" />
     <PackageReference Include="DevExpress.Win.Design" Version="25.2.4" />
     <PackageReference Include="DevExpress.Wpf.Core" Version="25.2.4" />
+    <PackageReference Include="EPPlus" Version="8.6.3" />
     <PackageReference Include="Google_GenerativeAI.Microsoft" Version="3.6.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
       <PrivateAssets>all</PrivateAssets>

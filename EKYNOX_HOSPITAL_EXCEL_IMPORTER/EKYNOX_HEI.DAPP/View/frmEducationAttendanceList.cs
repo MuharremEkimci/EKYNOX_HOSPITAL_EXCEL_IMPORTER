@@ -1,4 +1,7 @@
 ﻿using DevExpress.XtraEditors;
+using EKYNOX_HEI.CORE.Helpers;
+using EKYNOX_HEI.CORE.Models.EducationAttendance;
+using EKYNOX_HEI.DAPP.Controller;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -14,10 +17,29 @@ namespace EKYNOX_HEI.DAPP.View
     public partial class frmEducationAttendanceList : DevExpress.XtraEditors.XtraForm
     {
         private readonly IServiceProvider serviceProvider;
-        public frmEducationAttendanceList(IServiceProvider serviceProvider)
+        private List<EducationAttendanceListViewModel> listData;
+        private readonly clsEducationAttendance educationAttendaceService;
+
+        public frmEducationAttendanceList(IServiceProvider serviceProvider, clsEducationAttendance _educationAttendanceService)
         {
             InitializeComponent();
             this.serviceProvider = serviceProvider;
+            educationAttendaceService = _educationAttendanceService;
+            listData = new List<EducationAttendanceListViewModel>();
+        }
+
+        void DataRefresh() 
+        {
+            var res = educationAttendaceService.GetEducationAttendanceList();
+            if (res.Status == CORE.Enums.StatusEnum.Error)
+            {
+                MessageBox.Show("Eğitim katılım listesi getirilirken hata oluştu.","Hata", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                AppLogger.Error(DateTime.Now, nameof(frmEducationAttendanceList), nameof(DataRefresh), nameof(educationAttendaceService.GetEducationAttendanceList), res.Message);
+                return;
+            }
+
+            listData = res.Data;
+            grdList.DataSource = listData;
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -38,12 +60,26 @@ namespace EKYNOX_HEI.DAPP.View
             if (e.Item.Name == "bbtnAdd")
             {
                 var frm = serviceProvider.GetRequiredService<frmEducationAttendance>();
-                frm.ShowDialog();
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    DataRefresh();
+                }
             }
 
             if (e.Item.Name == "bbtnUpdate")
             {
+                var row = grvList.GetRow(grvList.FocusedRowHandle) as EducationAttendanceListViewModel;
 
+                if (row is not null)
+                {
+                    var frm = serviceProvider.GetRequiredService<frmEducationAttendance>();
+                    frm.updInfo = row;
+
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        DataRefresh();
+                    }
+                }
             }
 
             if (e.Item.Name == "bbtnDelete")
