@@ -1,8 +1,10 @@
 ﻿using DevExpress.XtraEditors;
+using DevExpress.XtraSplashScreen;
 using EKYNOX_HEI.CORE.Enums;
 using EKYNOX_HEI.CORE.Helpers;
 using EKYNOX_HEI.CORE.Models.EducationAttendance;
 using EKYNOX_HEI.DAPP.Controller;
+using EKYNOX_HEI.DAPP.View.Common;
 using GenerativeAI.Types;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
@@ -21,7 +23,8 @@ namespace EKYNOX_HEI.DAPP.View
     {
         public EducationAttendanceListModel imageInfo;
         private readonly clsEducationAttendance educationAttendanceService;
-
+        public byte[]? excelData;
+ 
         public frmImageReadConfirm(clsEducationAttendance _educationAttendanceService)
         {
             InitializeComponent();
@@ -73,25 +76,46 @@ namespace EKYNOX_HEI.DAPP.View
             //                   ]
             //                 }}";
 
-            var res = await educationAttendanceService.GetImageReadAI(imageInfo.FileData, imageInfo.FileMimeType);
-            if (res.Status == StatusEnum.Warning)
+            if (imageInfo.LogicalRef > 0 || imageInfo.Detail.Any())
             {
-                MessageBox.Show(res.Message, "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                grdImageReadList.DataSource = imageInfo.Detail;
+                grvImageReadList.Columns["ClassNo"].Width = 45;
+            }
+            else
+            {
+                SplashScreenManager.ShowForm(typeof(frmWaitingForm));
+                var res = await educationAttendanceService.GetImageReadAI(imageInfo.FileData, imageInfo.FileMimeType);
+                SplashScreenManager.CloseForm();
+                if (res.Status == StatusEnum.Warning)
+                {
+                    MessageBox.Show(res.Message, "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    this.Close();
+                    return;
+                }
+
+                if (res.Status == StatusEnum.Error)
+                {
+                    MessageBox.Show("Yapay zeka işleminde hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    AppLogger.Error(DateTime.Now, nameof(frmImageReadConfirm), nameof(frmImageReadConfirm_Load), nameof(educationAttendanceService.GetImageReadAI), res.Message);
+                    this.Close();
+                    return;
+                }
+
+                imageInfo.Detail = res.Data;
+                grdImageReadList.DataSource = imageInfo.Detail;
+                grvImageReadList.Columns["ClassNo"].Width = 45;
+            }
+
+            var readRes = educationAttendanceService.ReadExcel(imageInfo.ModuleType, excelData);
+            if (readRes.Status == StatusEnum.Error)
+            {
+                MessageBox.Show("Excel okuma işleminde hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AppLogger.Error(DateTime.Now, nameof(frmImageReadConfirm), nameof(frmImageReadConfirm_Load), nameof(educationAttendanceService.ReadExcel), readRes.Message);
                 this.Close();
                 return;
             }
 
-            if (res.Status == StatusEnum.Error)
-            {
-                MessageBox.Show("Yapay zeka işleminde hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                AppLogger.Error(DateTime.Now, nameof(frmImageReadConfirm), nameof(frmImageReadConfirm_Load), nameof(educationAttendanceService.GetImageReadAI), res.Message);
-                this.Close();
-                return;
-            }
-
-            imageInfo.Detail = res.Data;
-            grdImageReadList.DataSource = imageInfo.Detail;
-            grvImageReadList.Columns["ClassNo"].Width = 45;
+            grdExcelList.DataSource = readRes.Data;
         }
 
         private void btnConfirm_Click(object sender, EventArgs e)

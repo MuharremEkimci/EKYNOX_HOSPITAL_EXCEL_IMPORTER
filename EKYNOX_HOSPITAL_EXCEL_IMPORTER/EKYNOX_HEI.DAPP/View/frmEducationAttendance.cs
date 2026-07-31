@@ -14,20 +14,27 @@ using DevExpress.XtraSplashScreen;
 using EKYNOX_HEI.DAPP.Controller;
 using Microsoft.Extensions.DependencyInjection;
 using HeyRed.Mime;
+using EKYNOX_HEI.DATA.DataModel.Common;
+using EKYNOX_HEI.CORE.Helpers;
 
 namespace EKYNOX_HEI.DAPP.View
 {
     public partial class frmEducationAttendance : DevExpress.XtraEditors.XtraForm
     {
-        private List<EducationAttendanceListModel> list;
+        private EducationAttendanceModel viewModel;
         private readonly clsEducationAttendance educationAttendanceService;
         private readonly IServiceProvider serviceProvider;
-        public frmEducationAttendance(clsEducationAttendance _educationAttendanceService, IServiceProvider serviceProvider)
+        private readonly UserInfoSet userInfo;
+        public EducationAttendanceListViewModel updInfo;
+
+        public frmEducationAttendance(clsEducationAttendance _educationAttendanceService, IServiceProvider serviceProvider, UserInfoSet _userInfo)
         {
             InitializeComponent();
-            list = new List<EducationAttendanceListModel>();
+            viewModel = new EducationAttendanceModel();
             educationAttendanceService = _educationAttendanceService;
             this.serviceProvider = serviceProvider;
+            this.userInfo = _userInfo;
+            updInfo = new EducationAttendanceListViewModel();
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -49,7 +56,13 @@ namespace EKYNOX_HEI.DAPP.View
 
             try
             {
-                if (list.Any(c => c.ReadAndExcelProcess != CORE.Enums.ReadAndExcelProcessEnum.ProcessCompleted))
+                if (Convert.ToInt32(slueEducator.EditValue) <= 0)
+                    throw new Exception("Eğitmen seçilmesi zorunludur.");
+
+                if (Convert.ToInt32(slueInstitutions.EditValue) <= 0)
+                    throw new Exception("Kurum seçilmesi zorunludur.");
+
+                if (viewModel.ImagesDetailList.Any(c => c.ReadAndExcelProcess != CORE.Enums.ReadAndExcelProcessEnum.ProcessCompleted))
                     throw new Exception("Yüklenen tüm resimlerin veri doğrulama işlemleri tamamlanmalıdır.");
             }
             catch (Exception ex)
@@ -82,9 +95,9 @@ namespace EKYNOX_HEI.DAPP.View
                         var fileData = File.ReadAllBytes(file);
                         var fileMimeType = MimeTypesMap.GetMimeType(filePath);
 
-                        if (!list.Any(c => c.FileName == fileName || c.FileData == fileData))
+                        if (!viewModel.ImagesDetailList.Any(c => c.FileName == fileName || c.FileData == fileData))
                         {
-                            list.Add(new EducationAttendanceListModel
+                            viewModel.ImagesDetailList.Add(new EducationAttendanceListModel
                             {
                                 FilePath = filePath,
                                 FileName = fileName,
@@ -96,9 +109,6 @@ namespace EKYNOX_HEI.DAPP.View
                         }
                     }
                 }
-
-                grdList.DataSource = list;
-                grvList.Columns["EducationDate"].ColumnEdit = repDeDate;
             }
         }
 
@@ -123,13 +133,45 @@ namespace EKYNOX_HEI.DAPP.View
             slueEducator.Properties.DataSource = educationAttendanceService.GetUsersList().Data;
             slueEducator.Properties.ValueMember = "LogicalRef";
             slueEducator.Properties.DisplayMember = "FullName";
+
+            slueEducator.EditValue = userInfo.LogicalRef;
+
+            if (updInfo.LogicalRef > 0)
+            {
+                var res = educationAttendanceService.GetData(updInfo.LogicalRef);
+                if (res.Status == CORE.Enums.StatusEnum.Error)
+                {
+                    MessageBox.Show("İlgili kayıt getirilirken hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    AppLogger.Error(DateTime.Now, nameof(frmEducationAttendance), nameof(frmEducationAttendance_Load), nameof(educationAttendanceService.GetData), res.Message);
+                    this.DialogResult = DialogResult.Cancel;
+                    return;
+                }
+
+                if (res.Status == CORE.Enums.StatusEnum.Warning)
+                {
+                    MessageBox.Show(res.Message, "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    this.DialogResult = DialogResult.Cancel;
+                    return;
+                }
+
+                var data = res.Data;
+
+                viewModel.LogicalRef = data.LogicalRef;
+                teDocNo.Text = data.DocNo;
+                slueEducator.EditValue = data.EducatorRef;
+                slueInstitutions.EditValue = data.InstitutionRef;
+                viewModel.ImagesDetailList = data.ImagesDetailList;
+            }
+
+            grdList.DataSource = viewModel.ImagesDetailList;
+            grvList.Columns["EducationDate"].ColumnEdit = repDeDate;
         }
 
         private void btnReadImages_Click(object sender, EventArgs e)
        {
             if (ReadImagesValidate() && MessageBox.Show("Görsellere istinaden girilen bilgilerin doğruluğundan emin misiniz?", "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                var filterList = list.Where(c => c.ReadAndExcelProcess == CORE.Enums.ReadAndExcelProcessEnum.NonProcess).OrderBy(c => c.EducationNumber).ThenBy(c => c.EducationType).ToList();
+                var filterList = viewModel.ImagesDetailList.Where(c => c.ReadAndExcelProcess == CORE.Enums.ReadAndExcelProcessEnum.NonProcess).OrderBy(c => c.EducationNumber).ThenBy(c => c.EducationType).ToList();
 
                 //SplashScreenManager.ShowForm(typeof(frmWaitingForm));
                 //SplashScreenManager.CloseForm();
@@ -138,8 +180,11 @@ namespace EKYNOX_HEI.DAPP.View
                 {
                     var frm = serviceProvider.GetRequiredService<frmImageReadConfirm>();
                     frm.imageInfo = item;
+                    frm.excelData = viewModel.ExcelData;
                     if (frm.ShowDialog() != DialogResult.OK)
                         break;
+
+                    viewModel.ExcelData = frm.excelData;
                 }               
             }
         }
@@ -150,13 +195,13 @@ namespace EKYNOX_HEI.DAPP.View
 
             try
             {
-                if (!list.Any())
+                if (!viewModel.ImagesDetailList.Any())
                     throw new Exception("Görsel Seçimi Yapılmalıdır.");
 
-                if (list.Any(c => !Enum.IsDefined(c.EducationType)))
+                if (viewModel.ImagesDetailList.Any(c => !Enum.IsDefined(c.EducationType)))
                     throw new Exception("Eğitim Türü Seçimi Yapılmalıdır.");
 
-                if (list.Any(c => !Enum.IsDefined(c.ModuleType)))
+                if (viewModel.ImagesDetailList.Any(c => !Enum.IsDefined(c.ModuleType)))
                     throw new Exception("Modül Seçimi Yapılmalıdır.");
             }
             catch (Exception ex)

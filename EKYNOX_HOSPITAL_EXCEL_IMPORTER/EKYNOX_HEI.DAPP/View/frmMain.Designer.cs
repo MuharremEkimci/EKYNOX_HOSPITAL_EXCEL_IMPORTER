@@ -34,6 +34,13 @@
             rgbbTemalar = new DevExpress.XtraBars.RibbonGalleryBarItem();
             btnAppExit = new DevExpress.XtraBars.BarButtonItem();
             btnAISettings = new DevExpress.XtraBars.BarButtonItem();
+            barButtonGroup1 = new DevExpress.XtraBars.BarButtonGroup();
+            barSubItem1 = new DevExpress.XtraBars.BarSubItem();
+            barSubItem2 = new DevExpress.XtraBars.BarSubItem();
+            barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
+            btnArtificialIntelligence = new DevExpress.XtraBars.BarSubItem();
+            barSubItem3 = new DevExpress.XtraBars.BarSubItem();
+            barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
             ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             ribbonPageGroup4 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             btnUsers = new DevExpress.XtraBars.BarButtonItem();
@@ -45,6 +52,7 @@
             ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             btnInstitutions = new DevExpress.XtraBars.BarButtonItem();
             btnEducationAttendandce = new DevExpress.XtraBars.BarButtonItem();
+            ribbonPageGroup6 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             ribbonStatusBar = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             xtmm = new DevExpress.XtraTabbedMdi.XtraTabbedMdiManager(components);
             ((System.ComponentModel.ISupportInitialize)ribbon).BeginInit();
@@ -55,10 +63,10 @@
             // 
             ribbon.EmptyAreaImageOptions.ImagePadding = new Padding(26, 24, 26, 24);
             ribbon.ExpandCollapseItem.Id = 0;
-            ribbon.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbon.ExpandCollapseItem, rgbbTemalar, btnAppExit, btnAISettings });
+            ribbon.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbon.ExpandCollapseItem, rgbbTemalar, btnAppExit, btnAISettings, barButtonGroup1, barSubItem1, barSubItem2, barButtonItem1, btnArtificialIntelligence, barSubItem3, barButtonItem2 });
             ribbon.Location = new Point(0, 0);
             ribbon.Margin = new Padding(3, 2, 3, 2);
-            ribbon.MaxItemId = 11;
+            ribbon.MaxItemId = 20;
             ribbon.Name = "ribbon";
             ribbon.OptionsMenuMinWidth = 283;
             ribbon.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { ribbonPage1, rpProcess });
@@ -83,9 +91,55 @@
             // 
             btnAISettings.Caption = "AI Ayarları";
             btnAISettings.Id = 10;
-            btnAISettings.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("barButtonItem1.ImageOptions.SvgImage");
+            btnAISettings.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("btnAISettings.ImageOptions.SvgImage");
             btnAISettings.Name = "btnAISettings";
             btnAISettings.ItemClick += barButtonItem1_ItemClick_1;
+            // 
+            // barButtonGroup1
+            // 
+            barButtonGroup1.Caption = "barButtonGroup1";
+            barButtonGroup1.Id = 11;
+            barButtonGroup1.Name = "barButtonGroup1";
+            // 
+            // barSubItem1
+            // 
+            barSubItem1.Caption = "barSubItem1";
+            barSubItem1.Id = 13;
+            barSubItem1.Name = "barSubItem1";
+            // 
+            // barSubItem2
+            // 
+            barSubItem2.Caption = "barSubItem2";
+            barSubItem2.Id = 14;
+            barSubItem2.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] { new DevExpress.XtraBars.LinkPersistInfo(barButtonItem1) });
+            barSubItem2.Name = "barSubItem2";
+            // 
+            // barButtonItem1
+            // 
+            barButtonItem1.Caption = "barButtonItem1";
+            barButtonItem1.Id = 15;
+            barButtonItem1.Name = "barButtonItem1";
+            // 
+            // btnArtificialIntelligence
+            // 
+            btnArtificialIntelligence.Caption = "Yapay Zeka";
+            btnArtificialIntelligence.Id = 17;
+            btnArtificialIntelligence.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("btnArtificialIntelligence.ImageOptions.SvgImage");
+            btnArtificialIntelligence.Name = "btnArtificialIntelligence";
+            btnArtificialIntelligence.ItemClick += btnArtificialIntelligence_ItemClick;
+            // 
+            // barSubItem3
+            // 
+            barSubItem3.Caption = "barSubItem3";
+            barSubItem3.Id = 18;
+            barSubItem3.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] { new DevExpress.XtraBars.LinkPersistInfo(barButtonItem2) });
+            barSubItem3.Name = "barSubItem3";
+            // 
+            // barButtonItem2
+            // 
+            barButtonItem2.Caption = "barButtonItem2";
+            barButtonItem2.Id = 19;
+            barButtonItem2.Name = "barButtonItem2";
             // 
             // ribbonPage1
             // 
@@ -135,7 +189,7 @@
             // 
             // rpProcess
             // 
-            rpProcess.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup1 });
+            rpProcess.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup1, ribbonPageGroup6 });
             rpProcess.Name = "rpProcess";
             rpProcess.Text = "İşlemler";
             // 
@@ -161,6 +215,12 @@
             btnEducationAttendandce.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("btnEducationAttendandce.ImageOptions.SvgImage");
             btnEducationAttendandce.Name = "btnEducationAttendandce";
             btnEducationAttendandce.ItemClick += btnEducationAttendandce_ItemClick;
+            // 
+            // ribbonPageGroup6
+            // 
+            ribbonPageGroup6.ItemLinks.Add(btnArtificialIntelligence);
+            ribbonPageGroup6.Name = "ribbonPageGroup6";
+            ribbonPageGroup6.Text = "AI";
             // 
             // ribbonStatusBar
             // 
@@ -216,5 +276,13 @@
         private DevExpress.XtraTabbedMdi.XtraTabbedMdiManager xtmm;
         private DevExpress.XtraBars.BarButtonItem btnAISettings;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup5;
+        private DevExpress.XtraBars.BarButtonGroup barButtonGroup1;
+        private DevExpress.XtraBars.BarSubItem barSubItem1;
+        private DevExpress.XtraBars.BarSubItem barSubItem2;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem1;
+        private DevExpress.XtraBars.BarSubItem btnArtificialIntelligence;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup6;
+        private DevExpress.XtraBars.BarSubItem barSubItem3;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem2;
     }
 }
