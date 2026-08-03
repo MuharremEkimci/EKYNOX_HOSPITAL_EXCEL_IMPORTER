@@ -57,7 +57,6 @@ namespace EKYNOX_HEI.DAPP.View
             chatClient = null;
         }
 
-
         private void SetAI() 
         {
             switch (aiType)

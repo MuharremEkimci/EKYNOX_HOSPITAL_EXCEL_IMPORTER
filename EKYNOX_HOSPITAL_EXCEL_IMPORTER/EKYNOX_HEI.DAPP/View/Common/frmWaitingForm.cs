@@ -14,7 +14,7 @@ namespace EKYNOX_HEI.DAPP.View.Common
         public frmWaitingForm()
         {
             InitializeComponent();
-            this.progressPanel1.AutoHeight = true;
+            this.mainProgPanel.AutoHeight = true;
         }
 
         #region Overrides
@@ -22,12 +22,12 @@ namespace EKYNOX_HEI.DAPP.View.Common
         public override void SetCaption(string caption)
         {
             base.SetCaption(caption);
-            this.progressPanel1.Caption = caption;
+            this.mainProgPanel.Caption = caption;
         }
         public override void SetDescription(string description)
         {
             base.SetDescription(description);
-            this.progressPanel1.Description = description;
+            this.mainProgPanel.Description = description;
         }
         public override void ProcessCommand(Enum cmd, object arg)
         {
@@ -35,6 +35,11 @@ namespace EKYNOX_HEI.DAPP.View.Common
         }
 
         #endregion
+
+        private void frmWaitingForm_Load(object sender, EventArgs e)
+        {
+
+        }
 
         public enum WaitFormCommand
         {

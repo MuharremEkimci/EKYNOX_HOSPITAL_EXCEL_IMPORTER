@@ -13,7 +13,9 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
 
@@ -24,12 +26,14 @@ namespace EKYNOX_HEI.DAPP.View
         public EducationAttendanceListModel imageInfo;
         private readonly clsEducationAttendance educationAttendanceService;
         public byte[]? excelData;
- 
+        public string educator;
+
         public frmImageReadConfirm(clsEducationAttendance _educationAttendanceService)
         {
             InitializeComponent();
             imageInfo = new EducationAttendanceListModel();
             educationAttendanceService = _educationAttendanceService;
+            educator = "";
         }
 
         private async void frmImageReadConfirm_Load(object sender, EventArgs e)
@@ -84,6 +88,7 @@ namespace EKYNOX_HEI.DAPP.View
             else
             {
                 SplashScreenManager.ShowForm(typeof(frmWaitingForm));
+                SplashScreenManager.Default.SetWaitFormCaption("AI Görüntü Okuma İşlemi Sağlanıyor...");
                 var res = await educationAttendanceService.GetImageReadAI(imageInfo.FileData, imageInfo.FileMimeType);
                 SplashScreenManager.CloseForm();
                 if (res.Status == StatusEnum.Warning)
@@ -126,6 +131,32 @@ namespace EKYNOX_HEI.DAPP.View
             imageInfo.ModuleType = (ModuleTypeEnum)lueModule.EditValue;
             imageInfo.EducationNumber = Convert.ToInt32(seEducationNumber.EditValue);
             imageInfo.ReadAndExcelProcess = ReadAndExcelProcessEnum.ProcessCompleted;
+
+            var file = Path.Combine(AppContext.BaseDirectory, "Files/Extension", "Temp.xlsx");
+            byte[] excelPostData = excelData != null ? excelData : File.ReadAllBytes(file);
+
+            SplashScreenManager.ShowForm(typeof(frmWaitingForm));
+            SplashScreenManager.Default.SetWaitFormCaption("Excel Yazma İşlemi Sağlanıyor...");
+            var excelRes = educationAttendanceService.WriteExcel(excelPostData, imageInfo, educator);
+            SplashScreenManager.CloseForm();
+            if (excelRes.Status == StatusEnum.Warning)
+            {
+                MessageBox.Show(excelRes.Message, "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                this.DialogResult = DialogResult.Cancel;
+                return;
+            }
+                        
+            if (excelRes.Status == StatusEnum.Error)
+            {
+                MessageBox.Show("Excel yazma işleminde hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AppLogger.Error(DateTime.Now, nameof(frmImageReadConfirm), nameof(frmImageReadConfirm_Load), nameof(educationAttendanceService.WriteExcel), excelRes.Message);
+                this.DialogResult = DialogResult.Cancel;
+                return;
+            }
+
+            imageInfo.ReadAndExcelProcess = ReadAndExcelProcessEnum.ProcessCompleted;
+            excelData = excelRes.Data;
+            this.DialogResult = DialogResult.OK;
         }
 
         private void btnClose_Click(object sender, EventArgs e)

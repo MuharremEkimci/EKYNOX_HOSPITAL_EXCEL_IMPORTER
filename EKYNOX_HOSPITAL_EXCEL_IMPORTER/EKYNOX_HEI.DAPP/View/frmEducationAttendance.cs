@@ -1,6 +1,14 @@
 ﻿using DevExpress.XtraEditors;
+using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraSplashScreen;
+using EKYNOX_HEI.CORE.Enums;
+using EKYNOX_HEI.CORE.Helpers;
 using EKYNOX_HEI.CORE.Models.EducationAttendance;
+using EKYNOX_HEI.DAPP.Controller;
 using EKYNOX_HEI.DAPP.View.Common;
+using EKYNOX_HEI.DATA.DataModel.Common;
+using HeyRed.Mime;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,12 +18,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using DevExpress.XtraSplashScreen;
-using EKYNOX_HEI.DAPP.Controller;
-using Microsoft.Extensions.DependencyInjection;
-using HeyRed.Mime;
-using EKYNOX_HEI.DATA.DataModel.Common;
-using EKYNOX_HEI.CORE.Helpers;
 
 namespace EKYNOX_HEI.DAPP.View
 {
@@ -50,7 +52,7 @@ namespace EKYNOX_HEI.DAPP.View
             }
         }
 
-        private bool SaveValidate() 
+        private bool SaveValidate()
         {
             var blResult = true;
 
@@ -68,7 +70,7 @@ namespace EKYNOX_HEI.DAPP.View
             catch (Exception ex)
             {
                 blResult = false;
-                MessageBox.Show(ex.Message,"Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(ex.Message, "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
             return blResult;
@@ -168,33 +170,34 @@ namespace EKYNOX_HEI.DAPP.View
         }
 
         private void btnReadImages_Click(object sender, EventArgs e)
-       {
+        {
             if (ReadImagesValidate() && MessageBox.Show("Görsellere istinaden girilen bilgilerin doğruluğundan emin misiniz?", "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 var filterList = viewModel.ImagesDetailList.Where(c => c.ReadAndExcelProcess == CORE.Enums.ReadAndExcelProcessEnum.NonProcess).OrderBy(c => c.EducationNumber).ThenBy(c => c.EducationType).ToList();
-
-                //SplashScreenManager.ShowForm(typeof(frmWaitingForm));
-                //SplashScreenManager.CloseForm();
 
                 foreach (var item in filterList)
                 {
                     var frm = serviceProvider.GetRequiredService<frmImageReadConfirm>();
                     frm.imageInfo = item;
                     frm.excelData = viewModel.ExcelData;
+                    frm.educator = slueEducator.Text;
                     if (frm.ShowDialog() != DialogResult.OK)
                         break;
 
                     viewModel.ExcelData = frm.excelData;
-                }               
+                }
             }
         }
 
-        private bool ReadImagesValidate() 
+        private bool ReadImagesValidate()
         {
             bool blResult = true;
 
             try
             {
+                if (Convert.ToInt32(slueEducator.EditValue) <= 0)
+                    throw new Exception("Eğitmen Seçimi Yapılmalıdır.");
+
                 if (!viewModel.ImagesDetailList.Any())
                     throw new Exception("Görsel Seçimi Yapılmalıdır.");
 
@@ -207,10 +210,48 @@ namespace EKYNOX_HEI.DAPP.View
             catch (Exception ex)
             {
                 blResult = false;
-                MessageBox.Show(ex.Message, "Uyarı", MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
+                MessageBox.Show(ex.Message, "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
             return blResult;
+        }
+
+        private void grvList_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Shift && e.KeyCode == Keys.Delete)
+            {
+                int rowHandle = grvList.FocusedRowHandle;
+                if (rowHandle >= 0 && MessageBox.Show("Satır Silinecektir.", "Uyarı", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                {
+                    var row = grvList.GetRow(rowHandle) as CORE.Models.EducationAttendance.EducationAttendanceListModel;
+
+                    if (row != null && row.ReadAndExcelProcess == CORE.Enums.ReadAndExcelProcessEnum.ProcessCompleted)
+                    {
+                        MessageBox.Show("İşlem yapılan satırlar silinemez.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
+
+                    grvList.DeleteRow(rowHandle);
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void grvList_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
+        {
+            if (e.RowHandle < 0)
+                return;
+
+            GridView view = sender as GridView;
+
+            ReadAndExcelProcessEnum durum = (ReadAndExcelProcessEnum)view.GetRowCellValue(e.RowHandle, "ReadAndExcelProcess");
+
+            if (durum == ReadAndExcelProcessEnum.ProcessCompleted)
+            {
+                e.Appearance.BackColor = Color.LightGreen;
+                //e.Appearance.ForeColor = Color.White;
+                e.HighPriority = true;
+            }
         }
     }
 }
