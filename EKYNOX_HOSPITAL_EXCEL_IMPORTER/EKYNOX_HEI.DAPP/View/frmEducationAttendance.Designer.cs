@@ -138,7 +138,9 @@
             grvList.GridControl = grdList;
             grvList.Name = "grvList";
             grvList.OptionsView.ShowGroupPanel = false;
+            grvList.RowStyle += grvList_RowStyle;
             grvList.FocusedRowChanged += grvList_FocusedRowChanged;
+            grvList.KeyDown += grvList_KeyDown;
             // 
             // repDeDate
             // 

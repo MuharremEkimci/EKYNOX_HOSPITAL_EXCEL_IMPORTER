@@ -344,23 +344,50 @@ namespace EKYNOX_HEI.DAPP.Controller
             return result;
         }
 
-        public ReturnData<List<EducationAttendanceExcelReadModel>> WriteExcel(ModuleTypeEnum moduleType, byte[] excelData)
+        public ReturnData<byte[]> WriteExcel(byte[] excelData, EducationAttendanceListModel fileReadInfo, string educator)
         {
-            var result = new ReturnData<List<EducationAttendanceExcelReadModel>>();
-            result.Data = new List<EducationAttendanceExcelReadModel>();
+            var result = new ReturnData<byte[]>();
             try
             {
                 using (var ms = new MemoryStream(excelData))
                 using (var excelPackage = new ExcelPackage(ms))
                 {
-                    var worksheet = excelPackage.Workbook.Worksheets[moduleType.GetHashCode()];
+                    var worksheet = excelPackage.Workbook.Worksheets[fileReadInfo.ModuleType.GetHashCode()];
 
                     int rowCount = worksheet.Dimension.Rows;
                     int colCount = worksheet.Dimension.Columns;
 
-                    for (int row = 1; row < rowCount; row++)
+                    #region Kolon Kontrol
+                    var targetDateCol = 0;
+                    var targetEducatorCol = 0;
+                    for (int i = 1; i <= colCount; i++)
                     {
-                        result.Data.Add(new EducationAttendanceExcelReadModel
+                        string colName = fileReadInfo.EducationType == EducationTypeEnum.Education ? $"{i}. Eğitim Tarihi" : $"{i}. Simülasyon Tarihi";
+
+                        if ((worksheet.Cells[1, i].Value?.ToString() ?? "").Contains(colName))
+                        {
+                            targetDateCol = i;
+                            targetEducatorCol = i + 1;
+                            break;
+                        }
+                    }
+
+                    if (targetDateCol <= 0)
+                    {
+                        result.Status = StatusEnum.Warning;
+                        result.Message = $"Excel listesi, {EnumHelper.GetDisplayName(fileReadInfo.ModuleType)} adlı modülde {fileReadInfo.EducationNumber} numaralı {(fileReadInfo.EducationType == EducationTypeEnum.Education ? "Eğitim" : "Simülasyon")} tarihi sütunu bulunamadı.";
+                        result.Data = null;
+                        return result;
+                    }
+
+                    #endregion
+
+                    int writeRowCount = worksheet.Dimension.Rows + 1;
+                    var excelInfo = new List<EducationAttendanceExcelReadModel>();
+
+                    for (int row = 1; row <= rowCount; row++)
+                    {
+                        excelInfo.Add(new EducationAttendanceExcelReadModel
                         {
                             ClassNo = row,
                             Name = worksheet.Cells[row, 1].Value?.ToString() ?? "",
@@ -368,7 +395,175 @@ namespace EKYNOX_HEI.DAPP.Controller
                         });
                     }
 
+                    foreach (var detail in fileReadInfo.Detail)
+                    {
+                        var filter = excelInfo.FirstOrDefault(c => c.Name?.Trim() == detail.Name?.Trim() && c.Surname?.Trim() == detail.Surname?.Trim());
 
+                        if (filter is not null)
+                        {
+                            worksheet.Cells[filter.ClassNo, targetDateCol].Value = fileReadInfo.EducationDate.ToString("dd.MM.yyyy");
+                            if (fileReadInfo.EducationType == EducationTypeEnum.Education) 
+                                worksheet.Cells[filter.ClassNo, targetEducatorCol].Value = educator;
+                        }
+                        else
+                        {
+                            worksheet.Cells[writeRowCount, 1].Value = detail.Name;
+                            worksheet.Cells[writeRowCount, 2].Value = detail.Surname;
+                            worksheet.Cells[writeRowCount, targetDateCol].Value = fileReadInfo.EducationDate.ToString("dd.MM.yyyy");
+                            if (fileReadInfo.EducationType == EducationTypeEnum.Education)
+                                worksheet.Cells[writeRowCount, targetEducatorCol].Value = educator;
+
+                            writeRowCount++;
+                        }
+                    }
+
+                    result.Data = excelPackage.GetAsByteArray();
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Status = StatusEnum.Error;
+                result.Message = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ReturnData<bool> Save(EducationAttendanceModel educationAttendance) 
+        {
+            var result = new ReturnData<bool>();
+
+            try
+            {
+                using (var transaction = context.Database.BeginTransaction())
+                {
+                    var educAtt = new Mapper(new MapperConfiguration(c => c.CreateMap<EducationAttendanceModel, EducationAttendance>(), NullLoggerFactory.Instance))
+                                  .Map<EducationAttendance>(educationAttendance);
+
+                    context.EducationAttendance.Add(educAtt);
+                    context.SaveChanges();
+
+                    foreach (var detail in educationAttendance.ImagesDetailList)
+                    {
+                        var educAttDetail = new Mapper(new MapperConfiguration(c => c.CreateMap<EducationAttendanceListModel, EducationAttendanceDetail>(), NullLoggerFactory.Instance))
+                                             .Map<EducationAttendanceDetail>(detail);
+                        educAttDetail.EDUCATIONATTENDANCEREF = educAtt.LOGICALREF;
+                        context.EducationAttendanceDetail.Add(educAttDetail);
+                        context.SaveChanges();
+
+                        foreach (var fileRead in detail.Detail)
+                        {
+                            var educAttFileRead = new Mapper(new MapperConfiguration(c => c.CreateMap<EducationAttendanceDetailModel, EducationAttendanceFileRead>(), NullLoggerFactory.Instance))
+                                                    .Map<EducationAttendanceFileRead>(fileRead);
+                            educAttFileRead.EDUCATIONATTENDANCEDETAILREF = educAttDetail.LOGICALREF;
+                            context.EducationAttendanceFileRead.Add(educAttFileRead);
+                            context.SaveChanges();
+                        }
+                    }
+
+                    result.Data = true;
+                    result.Status = StatusEnum.Success;
+
+                    transaction.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Status = StatusEnum.Error;
+                result.Message = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ReturnData<bool> Update(EducationAttendanceModel educationAttendance) 
+        {
+            var result = new ReturnData<bool>();
+
+            try
+            {
+                using (var transaction = context.Database.BeginTransaction())
+                {
+                    var educAtt = context.EducationAttendance.Find(educationAttendance.LogicalRef);
+                    if (educAtt == null)
+                    {
+                        result.Status = StatusEnum.Warning;
+                        result.Message = "Veri bulunamadı.";
+                        return result;
+                    }
+
+                    var educAttUpdate = new Mapper(new MapperConfiguration(c => c.CreateMap<EducationAttendanceModel, EducationAttendance>(), NullLoggerFactory.Instance))
+                                         .Map(educationAttendance, educAtt);
+                    context.Entry(educAttUpdate).Property(x => x.CREATEDUSER).IsModified = false;
+                    context.Entry(educAttUpdate).Property(x => x.CREATEDATE).IsModified = false;
+                    context.EducationAttendance.Update(educAttUpdate);
+                    context.SaveChanges();
+
+                    var educAttDetail = context.EducationAttendanceDetail.Where(c => c.EDUCATIONATTENDANCEREF == educAtt.LOGICALREF).ToList();
+                    context.EducationAttendanceDetail.RemoveRange(educAttDetail);
+                    context.SaveChanges();
+                    context.EducationAttendanceFileRead.RemoveRange(context.EducationAttendanceFileRead.Where(c => educAttDetail.Select(c => c.LOGICALREF).Contains(c.EDUCATIONATTENDANCEDETAILREF)).ToList());
+                    context.SaveChanges();
+
+                    foreach (var detail in educationAttendance.ImagesDetailList)
+                    {
+                        var educAttDetailNew = new Mapper(new MapperConfiguration(c => c.CreateMap<EducationAttendanceListModel, EducationAttendanceDetail>(), NullLoggerFactory.Instance))
+                                                .Map<EducationAttendanceDetail>(detail);
+                        educAttDetailNew.EDUCATIONATTENDANCEREF = educAtt.LOGICALREF;
+                        context.EducationAttendanceDetail.Add(educAttDetailNew);
+                        context.SaveChanges();
+
+                        foreach (var fileRead in detail.Detail)
+                        {
+                            var educAttFileReadNew = new Mapper(new MapperConfiguration(c => c.CreateMap<EducationAttendanceDetailModel, EducationAttendanceFileRead>(), NullLoggerFactory.Instance))
+                                                        .Map<EducationAttendanceFileRead>(fileRead);
+                            educAttFileReadNew.EDUCATIONATTENDANCEDETAILREF = educAttDetailNew.LOGICALREF;
+                            context.EducationAttendanceFileRead.Add(educAttFileReadNew);
+                            context.SaveChanges();
+                        }
+                    }
+
+                    result.Data = true;
+                    result.Status = StatusEnum.Success;
+
+                    transaction.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Status = StatusEnum.Error;
+                result.Message = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ReturnData<bool> Delete(int id) 
+        {
+            var result = new ReturnData<bool>();
+
+            try
+            {
+                using (var transaction = context.Database.BeginTransaction())
+                {
+                    var control = context.EducationAttendance.Find(id);
+                    if (control is null)
+                    {
+                        result.Status = StatusEnum.Warning;
+                        result.Message = "Veri bulunamadı.";
+                        return result;
+                    }
+
+                    context.EducationAttendance.RemoveRange(control);
+                    context.SaveChanges();
+
+                    var educAttDetail = context.EducationAttendanceDetail.Where(c => c.EDUCATIONATTENDANCEREF == control.LOGICALREF).ToList();
+                    context.EducationAttendanceDetail.RemoveRange(educAttDetail);
+                    context.SaveChanges();
+                    context.EducationAttendanceFileRead.RemoveRange(context.EducationAttendanceFileRead.Where(c => educAttDetail.Select(c => c.LOGICALREF).Contains(c.EDUCATIONATTENDANCEDETAILREF)).ToList());
+                    context.SaveChanges();
+
+                    transaction.Commit();
                 }
             }
             catch (Exception ex)

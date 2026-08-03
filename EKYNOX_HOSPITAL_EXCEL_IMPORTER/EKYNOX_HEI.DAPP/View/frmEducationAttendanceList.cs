@@ -1,7 +1,9 @@
 ﻿using DevExpress.XtraEditors;
 using EKYNOX_HEI.CORE.Helpers;
+using EKYNOX_HEI.CORE.Models.AISetting;
 using EKYNOX_HEI.CORE.Models.EducationAttendance;
 using EKYNOX_HEI.DAPP.Controller;
+using EKYNOX_HEI.DAPP.View.AISetting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -28,12 +30,12 @@ namespace EKYNOX_HEI.DAPP.View
             listData = new List<EducationAttendanceListViewModel>();
         }
 
-        void DataRefresh() 
+        void DataRefresh()
         {
             var res = educationAttendaceService.GetEducationAttendanceList();
             if (res.Status == CORE.Enums.StatusEnum.Error)
             {
-                MessageBox.Show("Eğitim katılım listesi getirilirken hata oluştu.","Hata", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("Eğitim katılım listesi getirilirken hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 AppLogger.Error(DateTime.Now, nameof(frmEducationAttendanceList), nameof(DataRefresh), nameof(educationAttendaceService.GetEducationAttendanceList), res.Message);
                 return;
             }
@@ -84,7 +86,26 @@ namespace EKYNOX_HEI.DAPP.View
 
             if (e.Item.Name == "bbtnDelete")
             {
+                var row = grvList.GetRow(grvList.FocusedRowHandle) as EducationAttendanceListViewModel;
 
+                if (row != null && MessageBox.Show("İlgili kayıt silinecektir. İşlem geri alınamaz.", "Uyarı", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    var res = educationAttendaceService.Delete(row.LogicalRef);
+                    if (res.Status == CORE.Enums.StatusEnum.Warning)
+                    {
+                        MessageBox.Show(res.Message, "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
+
+                    if (res.Status == CORE.Enums.StatusEnum.Error)
+                    {
+                        MessageBox.Show("Silme işlemi yapılırken hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        AppLogger.Error(DateTime.Now, nameof(frmEducationAttendanceList), nameof(bmGrid_ItemClick), nameof(educationAttendaceService.Delete), res.Message);
+                        return;
+                    }
+
+                    DataRefresh();
+                }
             }
         }
 
@@ -95,10 +116,10 @@ namespace EKYNOX_HEI.DAPP.View
 
         private void grvList_MouseDown(object sender, MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Right)
             {
                 pmGrid.ShowPopup(MousePosition);
-            }   
+            }
         }
     }
 }

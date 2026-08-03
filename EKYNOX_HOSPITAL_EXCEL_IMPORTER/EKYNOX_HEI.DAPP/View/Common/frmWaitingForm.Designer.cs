@@ -28,30 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
-            progressPanel1 = new DevExpress.XtraWaitForm.ProgressPanel();
+            mainProgPanel = new DevExpress.XtraWaitForm.ProgressPanel();
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
-            // progressPanel1
+            // mainProgPanel
             // 
-            progressPanel1.Appearance.BackColor = Color.Transparent;
-            progressPanel1.Appearance.Options.UseBackColor = true;
-            progressPanel1.AppearanceCaption.Font = new Font("Microsoft Sans Serif", 12F);
-            progressPanel1.AppearanceCaption.Options.UseFont = true;
-            progressPanel1.AppearanceDescription.Font = new Font("Microsoft Sans Serif", 8.25F);
-            progressPanel1.AppearanceDescription.Options.UseFont = true;
-            progressPanel1.Caption = "Lütfen Bekleyiniz...";
-            progressPanel1.Description = "";
-            progressPanel1.Dock = DockStyle.Fill;
-            progressPanel1.ImageHorzOffset = 20;
-            progressPanel1.Location = new Point(0, 17);
-            progressPanel1.Margin = new Padding(0, 3, 0, 3);
-            progressPanel1.Name = "progressPanel1";
-            progressPanel1.ShowDescription = false;
-            progressPanel1.Size = new Size(246, 39);
-            progressPanel1.TabIndex = 0;
-            progressPanel1.Text = "progressPanel1";
+            mainProgPanel.Appearance.BackColor = Color.Transparent;
+            mainProgPanel.Appearance.Options.UseBackColor = true;
+            mainProgPanel.AppearanceCaption.Font = new Font("Microsoft Sans Serif", 12F);
+            mainProgPanel.AppearanceCaption.Options.UseFont = true;
+            mainProgPanel.AppearanceDescription.Font = new Font("Microsoft Sans Serif", 8.25F);
+            mainProgPanel.AppearanceDescription.Options.UseFont = true;
+            mainProgPanel.Caption = "Lütfen Bekleyiniz...";
+            mainProgPanel.Description = "";
+            mainProgPanel.Dock = DockStyle.Fill;
+            mainProgPanel.ImageHorzOffset = 20;
+            mainProgPanel.Location = new Point(0, 17);
+            mainProgPanel.Margin = new Padding(0, 3, 0, 3);
+            mainProgPanel.Name = "mainProgPanel";
+            mainProgPanel.ShowDescription = false;
+            mainProgPanel.Size = new Size(246, 39);
+            mainProgPanel.TabIndex = 0;
+            mainProgPanel.Text = "progressPanel1";
             // 
             // tableLayoutPanel1
             // 
@@ -60,7 +60,7 @@
             tableLayoutPanel1.BackColor = Color.Transparent;
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(progressPanel1, 0, 0);
+            tableLayoutPanel1.Controls.Add(mainProgPanel, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -82,6 +82,7 @@
             Name = "frmWaitingForm";
             StartPosition = FormStartPosition.Manual;
             Text = "Form1";
+            Load += frmWaitingForm_Load;
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -89,7 +90,7 @@
 
         #endregion
 
-        private DevExpress.XtraWaitForm.ProgressPanel progressPanel1;
+        private DevExpress.XtraWaitForm.ProgressPanel mainProgPanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }

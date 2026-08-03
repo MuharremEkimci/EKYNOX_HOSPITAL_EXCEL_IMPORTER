@@ -13,6 +13,7 @@ namespace EKYNOX_HEI.DATA.DataModel
         public string? DOCNO { get; set; }
         public int EDUCATORREF { get; set; }
         public int INSTUTIONREF { get; set; }
+        public byte[]? EXCELDATA { get; set; }
         public EducationStatusEnum EDUCATIONSTATUS { get; set; }
     }
 
