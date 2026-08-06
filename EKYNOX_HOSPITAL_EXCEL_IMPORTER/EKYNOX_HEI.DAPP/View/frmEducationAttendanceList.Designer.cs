@@ -42,11 +42,13 @@
             bbtnAdd = new DevExpress.XtraBars.BarButtonItem();
             bbtnUpdate = new DevExpress.XtraBars.BarButtonItem();
             bbtnDelete = new DevExpress.XtraBars.BarButtonItem();
+            bbtnExcelDownload = new DevExpress.XtraBars.BarButtonItem();
             bmGrid = new DevExpress.XtraBars.BarManager(components);
             barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             barDockControlRight = new DevExpress.XtraBars.BarDockControl();
+            bbtnShowExcel = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)layoutControl1).BeginInit();
             layoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)grdList).BeginInit();
@@ -134,7 +136,7 @@
             // 
             // pmGrid
             // 
-            pmGrid.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] { new DevExpress.XtraBars.LinkPersistInfo(bbtnAdd), new DevExpress.XtraBars.LinkPersistInfo(bbtnUpdate), new DevExpress.XtraBars.LinkPersistInfo(bbtnDelete) });
+            pmGrid.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] { new DevExpress.XtraBars.LinkPersistInfo(bbtnAdd), new DevExpress.XtraBars.LinkPersistInfo(bbtnUpdate), new DevExpress.XtraBars.LinkPersistInfo(bbtnDelete), new DevExpress.XtraBars.LinkPersistInfo(bbtnExcelDownload), new DevExpress.XtraBars.LinkPersistInfo(bbtnShowExcel) });
             pmGrid.Manager = bmGrid;
             pmGrid.Name = "pmGrid";
             // 
@@ -159,6 +161,13 @@
             bbtnDelete.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("bbtnDelete.ImageOptions.SvgImage");
             bbtnDelete.Name = "bbtnDelete";
             // 
+            // bbtnExcelDownload
+            // 
+            bbtnExcelDownload.Caption = "Excel İndir";
+            bbtnExcelDownload.Id = 3;
+            bbtnExcelDownload.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("bbtnExcelDownload.ImageOptions.SvgImage");
+            bbtnExcelDownload.Name = "bbtnExcelDownload";
+            // 
             // bmGrid
             // 
             bmGrid.DockControls.Add(barDockControlTop);
@@ -166,8 +175,8 @@
             bmGrid.DockControls.Add(barDockControlLeft);
             bmGrid.DockControls.Add(barDockControlRight);
             bmGrid.Form = this;
-            bmGrid.Items.AddRange(new DevExpress.XtraBars.BarItem[] { bbtnAdd, bbtnUpdate, bbtnDelete });
-            bmGrid.MaxItemId = 3;
+            bmGrid.Items.AddRange(new DevExpress.XtraBars.BarItem[] { bbtnAdd, bbtnUpdate, bbtnDelete, bbtnExcelDownload, bbtnShowExcel });
+            bmGrid.MaxItemId = 5;
             bmGrid.ItemClick += bmGrid_ItemClick;
             // 
             // barDockControlTop
@@ -202,6 +211,13 @@
             barDockControlRight.Manager = bmGrid;
             barDockControlRight.Size = new Size(0, 690);
             // 
+            // bbtnShowExcel
+            // 
+            bbtnShowExcel.Caption = "Excel Görüntüle";
+            bbtnShowExcel.Id = 4;
+            bbtnShowExcel.ImageOptions.SvgImage = (DevExpress.Utils.Svg.SvgImage)resources.GetObject("bbtnShowExcel.ImageOptions.SvgImage");
+            bbtnShowExcel.Name = "bbtnShowExcel";
+            // 
             // frmEducationAttendanceList
             // 
             AutoScaleDimensions = new SizeF(6F, 13F);
@@ -212,8 +228,10 @@
             Controls.Add(barDockControlRight);
             Controls.Add(barDockControlBottom);
             Controls.Add(barDockControlTop);
+            IconOptions.Image = (Image)resources.GetObject("frmEducationAttendanceList.IconOptions.Image");
             Name = "frmEducationAttendanceList";
             Text = "Eğitim Katılım Listesi";
+            Load += frmEducationAttendanceList_Load;
             KeyDown += frmEducationAttendanceList_KeyDown;
             ((System.ComponentModel.ISupportInitialize)layoutControl1).EndInit();
             layoutControl1.ResumeLayout(false);
@@ -248,5 +266,7 @@
         private DevExpress.XtraBars.BarDockControl barDockControlBottom;
         private DevExpress.XtraBars.BarDockControl barDockControlLeft;
         private DevExpress.XtraBars.BarDockControl barDockControlRight;
+        private DevExpress.XtraBars.BarButtonItem bbtnExcelDownload;
+        private DevExpress.XtraBars.BarButtonItem bbtnShowExcel;
     }
 }

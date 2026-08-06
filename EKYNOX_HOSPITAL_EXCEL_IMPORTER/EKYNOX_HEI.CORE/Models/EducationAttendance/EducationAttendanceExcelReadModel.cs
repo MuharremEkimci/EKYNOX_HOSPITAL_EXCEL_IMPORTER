@@ -8,15 +8,16 @@ namespace EKYNOX_HEI.CORE.Models.EducationAttendance
 {
     public class EducationAttendanceExcelReadModel
     {
-        [Editable(false)]
-        [DisplayName("Sıra No")]
+        [Browsable(false)]
+        //[ReadOnly(true)]
+        //[DisplayName("Sıra No")]
         public int ClassNo { get; set; }
 
-        [Editable(false)]
+        [ReadOnly(true)]
         [DisplayName("Adı")]
         public string? Name { get; set; }
 
-        [Editable(false)]
+        [ReadOnly(true)]
         [DisplayName("Soyadı")]
         public string? Surname { get; set; }
     }

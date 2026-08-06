@@ -77,14 +77,14 @@ namespace EKYNOX_HEI.CORE.Models.EducationAttendance
         [Browsable(false)]
         public int EducationAttendanceDetailRef { get; set; }
 
-        [Editable(false)]
-        [DisplayName("Sıra No")]
-        public int ClassNo { get; set; }
-
         [DisplayName("Adı")]
         public string? Name { get; set; }
 
         [DisplayName("Soyadı")]
         public string? Surname { get; set; }
+
+        [Editable(false)]
+        [DisplayName("Sıra No")]
+        public int ClassNo { get; set; }
     }
 }

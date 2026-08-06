@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using DevExpress.Dialogs.Core.View;
+using DevExpress.XtraScheduler.Outlook.Native;
 using EKYNOX_HEI.CORE.Enums;
 using EKYNOX_HEI.CORE.Helpers;
 using EKYNOX_HEI.CORE.Models.AISetting;
@@ -14,6 +16,8 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
+using System.Dynamic;
 using System.IO;
 using System.Management;
 using System.Reflection;
@@ -30,6 +34,26 @@ namespace EKYNOX_HEI.DAPP.Controller
         public clsEducationAttendance(DatabaseContext _context)
         {
             context = _context;
+        }
+
+        public ReturnData<string> CreateEducationAttendanceNo()
+        {
+            var result = new ReturnData<string>();
+
+            try
+            {
+                var lastInstitution = context.EducationAttendance.OrderByDescending(i => i.LOGICALREF).FirstOrDefault();
+                var template = $"EDUCATT{DateTime.Now.Year}.{(int.Parse((lastInstitution?.DOCNO.Split('.').LastOrDefault() ?? "0")) + 1).ToString().PadLeft(6, '0')}";
+                result.Status = StatusEnum.Success;
+                result.Data = template;
+            }
+            catch (Exception ex)
+            {
+                result.Status = StatusEnum.Error;
+                result.Message = ex.Message;
+            }
+
+            return result;
         }
 
         public ReturnData<List<EducationAttendanceListViewModel>> GetEducationAttendanceList() 
@@ -275,6 +299,7 @@ namespace EKYNOX_HEI.DAPP.Controller
 
                 var educAtt = new Mapper(new MapperConfiguration(c => c.CreateMap<EducationAttendance, EducationAttendanceModel>(), NullLoggerFactory.Instance))
                               .Map<EducationAttendanceModel>(educationAttendance);
+                educAtt.InstitutionRef = educationAttendance.INSTUTIONREF;
 
                 var educationAttendanceDetail = new Mapper(new MapperConfiguration(c => c.CreateMap<EducationAttendanceDetail, EducationAttendanceListModel>(), NullLoggerFactory.Instance))
                                                 .Map<List<EducationAttendanceListModel>>(context.EducationAttendanceDetail.Where(c => c.EDUCATIONATTENDANCEREF == id).ToList());
@@ -297,6 +322,8 @@ namespace EKYNOX_HEI.DAPP.Controller
 
                 educAtt.ImagesDetailList = joinData;
 
+                result.Data = educAtt;
+
             }
             catch (Exception ex)
             {
@@ -315,19 +342,22 @@ namespace EKYNOX_HEI.DAPP.Controller
             {
                 if (excelData is not null)
                 {
+                    ExcelPackage.License.SetNonCommercialOrganization("My Noncommercial organization");
                     using (var ms = new MemoryStream(excelData))
                     using (var excelPackage = new ExcelPackage(ms))
                     {
-                        var worksheet = excelPackage.Workbook.Worksheets[moduleType.GetHashCode()];
+                        var worksheet = excelPackage.Workbook.Worksheets[moduleType.GetHashCode() - 1];
 
                         int rowCount = worksheet.Dimension.Rows;
                         int colCount = worksheet.Dimension.Columns;
 
-                        for (int row = 1; row < rowCount; row++)
+                        for (int row = 2; row <= rowCount; row++)
                         {
+                            var classNo = row - 1;
+
                             result.Data.Add(new EducationAttendanceExcelReadModel 
                             {
-                                ClassNo = row,
+                                ClassNo = classNo,
                                 Name = worksheet.Cells[row, 1].Value?.ToString()??"",
                                 Surname = worksheet.Cells[row, 2].Value?.ToString() ?? "",
                             });           
@@ -344,17 +374,114 @@ namespace EKYNOX_HEI.DAPP.Controller
             return result;
         }
 
+        public ReturnData<byte[]> AgainReadClearProcessExcel(byte[] excelData, EducationAttendanceListModel fileReadInfo)
+        {
+            var result = new ReturnData<byte[]>();
+            try
+            {
+                ExcelPackage.License.SetNonCommercialOrganization("My Noncommercial organization");
+                using (var ms = new MemoryStream(excelData))
+                using (var excelPackage = new ExcelPackage(ms))
+                {
+                    var worksheet = excelPackage.Workbook.Worksheets[(fileReadInfo.ModuleType.GetHashCode() - 1)];
+
+                    int rowCount = worksheet.Dimension.Rows;
+                    int colCount = worksheet.Dimension.Columns;
+
+                    var educationInfos = new List<IDictionary<string, object>>();
+                    for (int i = 1; i <= 10; i++)
+                    {
+                        dynamic item = new Dictionary<string, object>();
+                        item["colName"] = fileReadInfo.EducationType == EducationTypeEnum.Education ? $"{i}. Eğitim Tarihi" : $"{i}. Simülasyon Tarihi";
+                        item["educationNumber"] = i;
+                        item["targetDateCol"] = 0;
+                        item["targetEducatorCol"] = 0;
+                        educationInfos.Add(item);
+                    }
+                        
+
+                    #region Kolon Kontrol
+                    for (int i = 1; i <= colCount; i++)
+                    {                        
+                        string excelColName = worksheet.Cells[1, i].Value?.ToString() ?? "";
+                        var filter = educationInfos.FirstOrDefault(c => excelColName.Replace(" ","").Contains(c["colName"].ToString().Replace(" ", "")));
+                        if (filter is not null)
+                        {
+                            filter["targetDateCol"] = i;
+                            filter["targetEducatorCol"] = i + 1;
+                        }
+                    }
+
+                    #endregion
+
+                    var deleteRowList = new List<int>();
+                    for (int i = 2; i <= rowCount; i++)
+                    {
+                        var excelReadName = worksheet.Cells[i, 1].Value?.ToString() ?? "";
+                        var excelReadSurname = worksheet.Cells[i, 2].Value?.ToString() ?? "";
+
+                        var filter = fileReadInfo.Detail.FirstOrDefault(c => c.Name?.Trim() == excelReadName?.Trim() && c.Surname?.Trim() == excelReadSurname?.Trim());
+                        if (filter is not null)
+                        {
+                            var blnClearRow = true;
+
+                            foreach (var item in educationInfos.Where(c => Convert.ToInt32(c["targetDateCol"]) > 0).OrderByDescending(c => Convert.ToInt32(c["targetDateCol"])))
+                            {
+                                var targetDateCol = Convert.ToInt32(item["targetDateCol"]);
+                                var targetEducatorCol = Convert.ToInt32(item["targetEducatorCol"]);
+
+                                var dateValue = worksheet.Cells[i, targetDateCol].Value?.ToString() ?? "";
+                                var educatorValue = worksheet.Cells[i, targetEducatorCol].Value?.ToString() ?? "";
+
+                                if (Convert.ToInt32(item["educationNumber"]) != fileReadInfo.EducationNumber)
+                                {
+                                    if (!string.IsNullOrEmpty(dateValue) || !string.IsNullOrEmpty(educatorValue))
+                                    {
+                                        blnClearRow = false;
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    worksheet.Cells[i, targetDateCol].Value = null;
+                                    worksheet.Cells[i, targetEducatorCol].Value = null;
+                                }                                
+                            }
+
+                            if (blnClearRow)
+                                deleteRowList.Add(i);
+                        }
+                    }
+
+                    foreach (var item in deleteRowList.OrderByDescending(c => c))
+                        worksheet.DeleteRow(item);
+
+                    result.Data = excelPackage.GetAsByteArray();
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Status = StatusEnum.Error;
+                result.Message = ex.Message;
+            }
+
+            return result;
+        }
+
         public ReturnData<byte[]> WriteExcel(byte[] excelData, EducationAttendanceListModel fileReadInfo, string educator)
         {
             var result = new ReturnData<byte[]>();
             try
             {
+                ExcelPackage.License.SetNonCommercialOrganization("My Noncommercial organization");
                 using (var ms = new MemoryStream(excelData))
                 using (var excelPackage = new ExcelPackage(ms))
                 {
-                    var worksheet = excelPackage.Workbook.Worksheets[fileReadInfo.ModuleType.GetHashCode()];
+                    var worksheet = excelPackage.Workbook.Worksheets[(fileReadInfo.ModuleType.GetHashCode() - 1)];
 
                     int rowCount = worksheet.Dimension.Rows;
+                    rowCount = worksheet.Dimension.Rows;
+
                     int colCount = worksheet.Dimension.Columns;
 
                     #region Kolon Kontrol
@@ -362,9 +489,10 @@ namespace EKYNOX_HEI.DAPP.Controller
                     var targetEducatorCol = 0;
                     for (int i = 1; i <= colCount; i++)
                     {
-                        string colName = fileReadInfo.EducationType == EducationTypeEnum.Education ? $"{i}. Eğitim Tarihi" : $"{i}. Simülasyon Tarihi";
+                        string colName = fileReadInfo.EducationType == EducationTypeEnum.Education ? $"{fileReadInfo.EducationNumber}. Eğitim Tarihi" : $"{fileReadInfo.EducationNumber}. Simülasyon Tarihi";
+                        string excelColName = worksheet.Cells[1, i].Value?.ToString() ?? "";
 
-                        if ((worksheet.Cells[1, i].Value?.ToString() ?? "").Contains(colName))
+                        if (excelColName.Contains(colName))
                         {
                             targetDateCol = i;
                             targetEducatorCol = i + 1;
@@ -385,7 +513,7 @@ namespace EKYNOX_HEI.DAPP.Controller
                     int writeRowCount = worksheet.Dimension.Rows + 1;
                     var excelInfo = new List<EducationAttendanceExcelReadModel>();
 
-                    for (int row = 1; row <= rowCount; row++)
+                    for (int row = 2; row <= rowCount; row++)
                     {
                         excelInfo.Add(new EducationAttendanceExcelReadModel
                         {
@@ -403,7 +531,7 @@ namespace EKYNOX_HEI.DAPP.Controller
                         {
                             worksheet.Cells[filter.ClassNo, targetDateCol].Value = fileReadInfo.EducationDate.ToString("dd.MM.yyyy");
                             if (fileReadInfo.EducationType == EducationTypeEnum.Education) 
-                                worksheet.Cells[filter.ClassNo, targetEducatorCol].Value = educator;
+                                worksheet.Cells[filter.ClassNo, targetEducatorCol].Value = educator.ToUpper();
                         }
                         else
                         {
@@ -411,7 +539,7 @@ namespace EKYNOX_HEI.DAPP.Controller
                             worksheet.Cells[writeRowCount, 2].Value = detail.Surname;
                             worksheet.Cells[writeRowCount, targetDateCol].Value = fileReadInfo.EducationDate.ToString("dd.MM.yyyy");
                             if (fileReadInfo.EducationType == EducationTypeEnum.Education)
-                                worksheet.Cells[writeRowCount, targetEducatorCol].Value = educator;
+                                worksheet.Cells[writeRowCount, targetEducatorCol].Value = educator.ToUpper();
 
                             writeRowCount++;
                         }
@@ -439,7 +567,7 @@ namespace EKYNOX_HEI.DAPP.Controller
                 {
                     var educAtt = new Mapper(new MapperConfiguration(c => c.CreateMap<EducationAttendanceModel, EducationAttendance>(), NullLoggerFactory.Instance))
                                   .Map<EducationAttendance>(educationAttendance);
-
+                    educAtt.INSTUTIONREF = educationAttendance.InstitutionRef;
                     context.EducationAttendance.Add(educAtt);
                     context.SaveChanges();
 
@@ -494,6 +622,7 @@ namespace EKYNOX_HEI.DAPP.Controller
 
                     var educAttUpdate = new Mapper(new MapperConfiguration(c => c.CreateMap<EducationAttendanceModel, EducationAttendance>(), NullLoggerFactory.Instance))
                                          .Map(educationAttendance, educAtt);
+                    educAtt.INSTUTIONREF = educationAttendance.InstitutionRef;
                     context.Entry(educAttUpdate).Property(x => x.CREATEDUSER).IsModified = false;
                     context.Entry(educAttUpdate).Property(x => x.CREATEDATE).IsModified = false;
                     context.EducationAttendance.Update(educAttUpdate);

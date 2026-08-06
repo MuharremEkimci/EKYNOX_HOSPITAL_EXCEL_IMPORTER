@@ -1,4 +1,5 @@
 ﻿using DevExpress.XtraEditors;
+using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraSplashScreen;
 using EKYNOX_HEI.CORE.Enums;
 using EKYNOX_HEI.CORE.Helpers;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -24,9 +26,12 @@ namespace EKYNOX_HEI.DAPP.View
     public partial class frmImageReadConfirm : DevExpress.XtraEditors.XtraForm
     {
         public EducationAttendanceListModel imageInfo;
+        private List<EducationAttendanceExcelReadModel> excelReadList;
         private readonly clsEducationAttendance educationAttendanceService;
         public byte[]? excelData;
         public string educator;
+        public bool blAgainProcess;
+        public bool blPreview;
 
         public frmImageReadConfirm(clsEducationAttendance _educationAttendanceService)
         {
@@ -34,6 +39,7 @@ namespace EKYNOX_HEI.DAPP.View
             imageInfo = new EducationAttendanceListModel();
             educationAttendanceService = _educationAttendanceService;
             educator = "";
+            excelReadList = new List<EducationAttendanceExcelReadModel>();
         }
 
         private async void frmImageReadConfirm_Load(object sender, EventArgs e)
@@ -52,45 +58,41 @@ namespace EKYNOX_HEI.DAPP.View
             seEducationNumber.EditValue = imageInfo.EducationNumber;
             peMain.Image = Image.FromStream(new System.IO.MemoryStream(imageInfo.FileData));
 
-
             //var ocrApp = new HandWritingOcrApp("https://readpaper.cognitiveservices.azure.com/", "9BAfnhkgsEGAAgmcpur4JZREmllvBUjx36a5lUu78EvcHTagoNolJQQJ99CGACYeBjFXJ3w3AAAFACOGTvuZ");
             //var dsd = ocrApp.OcrProcess(imageInfo.FileData);
 
-            //var prompt = $@"
-            //                 1. Bu görseldeki el yazılarını oku.
-            //                 2. Sadece katılımcıların İSİM ve SOYİSİMLERİNİ ayıkla ve TÜRKÇE BÜYÜK HARFLERLE yaz.
-            //                 3. El yazılarını dikkatli oku.
-            //                 4. El yazılarını dikkatli okuyarak yüksek tahminde bulun. saçmalama.
-            //                 5. Birim, Tarih, İmzalar gibi detayları ekleme.
-            //                 6. Çıktı sadece json formatında ver. Herhangi bir yorum ekleme sadece json çıktı ver.
-            //                 7. ```json kullanma.
-            //                 8. Markdown kullanma.
-            //                 9. Açıklama yazma.
-            //                 10. Ekstra metin yazma. 
-            //                 11. Tekrar ediyorum. SADECE geçerli JSON döndür. Markdown kullanma. ```json kullanma. Açıklama yazma. Ekstra metin yazma.
-            //                 12. Tekrar söylüyorum. SADECE geçerli JSON döndür. Markdown kullanma. ```json kullanma. Açıklama yazma. Ekstra metin yazma.
-            //                 13. Çıktıyı SADECE JSON formatında ver:
-            //                 {{
-            //                   """"participants"""": [
-            //                     {{
-            //                       """"class_no"""": 1,
-            //                       """"name"""": """"İSİM"""",
-            //                       """"surname"""": """"SOYİSİM""""
-            //                     }}
-            //                   ]
-            //                 }}";
+            if (blAgainProcess)
+            {
+                var res = educationAttendanceService.AgainReadClearProcessExcel(excelData, imageInfo);
+                if (res.Status == StatusEnum.Error)
+                {
+                    MessageBox.Show("Tekrar işlem excel temizleme sırasında hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    AppLogger.Error(DateTime.Now, nameof(frmImageReadConfirm), nameof(frmImageReadConfirm_Load), nameof(educationAttendanceService.AgainReadClearProcessExcel), res.Message);
+                    this.Close();
+                    return;
+                }
+
+                excelData = res.Data;
+            }
 
             if (imageInfo.LogicalRef > 0 || imageInfo.Detail.Any())
             {
-                grdImageReadList.DataSource = imageInfo.Detail;
-                grvImageReadList.Columns["ClassNo"].Width = 45;
+                grdImageReadList.DataSource = imageInfo.Detail;           
             }
             else
             {
-                SplashScreenManager.ShowForm(typeof(frmWaitingForm));
-                SplashScreenManager.Default.SetWaitFormCaption("AI Görüntü Okuma İşlemi Sağlanıyor...");
+                //var handle = SplashScreenManager.ShowOverlayForm(this);
+                //SplashScreenManager.Default.SetWaitFormCaption("AI Görüntü Okuma İşlemi Sağlanıyor...");
+                //var res = await educationAttendanceService.GetImageReadAI(imageInfo.FileData, imageInfo.FileMimeType);
+                //SplashScreenManager.CloseOverlayForm(handle);
+
+                this.Enabled = false;
+                SplashScreenManager.ShowForm(this,typeof(frmWaitingForm));
+                SplashScreenManager.Default.SetWaitFormCaption("AI Görüntü Okuma");
+                SplashScreenManager.Default.SetWaitFormDescription("Lütfen bekleyiniz...");
                 var res = await educationAttendanceService.GetImageReadAI(imageInfo.FileData, imageInfo.FileMimeType);
                 SplashScreenManager.CloseForm();
+                this.Enabled = true;
                 if (res.Status == StatusEnum.Warning)
                 {
                     MessageBox.Show(res.Message, "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -108,8 +110,17 @@ namespace EKYNOX_HEI.DAPP.View
 
                 imageInfo.Detail = res.Data;
                 grdImageReadList.DataSource = imageInfo.Detail;
-                grvImageReadList.Columns["ClassNo"].Width = 45;
             }
+
+            grvImageReadList.Columns["ClassNo"].Width = 50;
+            grvImageReadList.Columns["ClassNo"].AppearanceCell.Font = new Font(grvImageReadList.Appearance.Row.Font, FontStyle.Bold);
+            grvImageReadList.Columns["ClassNo"].AppearanceHeader.Font = new Font(grvImageReadList.Appearance.Row.Font, FontStyle.Bold);
+            grvImageReadList.Columns["Name"].ColumnEdit = repNameSurname;
+            grvImageReadList.Columns["Surname"].ColumnEdit = repNameSurname;
+
+            grvImageReadList.Columns["Name"].SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
+            grvImageReadList.Columns["Surname"].SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
+            grvImageReadList.Columns["Surname"].SortIndex = 1;
 
             var readRes = educationAttendanceService.ReadExcel(imageInfo.ModuleType, excelData);
             if (readRes.Status == StatusEnum.Error)
@@ -120,7 +131,23 @@ namespace EKYNOX_HEI.DAPP.View
                 return;
             }
 
-            grdExcelList.DataSource = readRes.Data;
+            excelReadList = readRes.Data.OrderBy(c => c.Name).ThenBy(c => c.Surname).ToList();
+            grdExcelList.DataSource = excelReadList;
+
+            if (blPreview)
+            {
+                grdImageReadList.Enabled = false;
+                deEducationDate.Enabled = false;
+                lueEducationType.Enabled = false;
+                lueModule.Enabled = false;
+                seEducationNumber.Enabled = false;
+                btnConfirm.Enabled = false;
+            }
+        }
+
+        private async void frmImageReadConfirm_Shown(object sender, EventArgs e)
+        {
+
         }
 
         private void btnConfirm_Click(object sender, EventArgs e)
@@ -145,7 +172,7 @@ namespace EKYNOX_HEI.DAPP.View
                 this.DialogResult = DialogResult.Cancel;
                 return;
             }
-                        
+
             if (excelRes.Status == StatusEnum.Error)
             {
                 MessageBox.Show("Excel yazma işleminde hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -170,7 +197,52 @@ namespace EKYNOX_HEI.DAPP.View
         private void grvImageReadList_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
         {
             if (e.Column.FieldName == "Name" || e.Column.FieldName == "Surname")
-                grvImageReadList.SetRowCellValue(e.RowHandle, e.Column, ((string)e.Value).ToUpper(new CultureInfo("tr-TR")));
+            {
+                grvImageReadList.RefreshRow(e.RowHandle);
+                grvExcelList.RefreshData();
+            }
         }
+
+        private void grvImageReadList_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
+        {
+            if (e.RowHandle < 0)
+                return;
+
+            GridView view = sender as GridView;
+
+            string name = (string)view.GetRowCellValue(e.RowHandle, "Name");
+            string surname = (string)view.GetRowCellValue(e.RowHandle, "Surname");
+
+            if (excelReadList.Any(c => c.Name == name && c.Surname == surname))
+            {
+                e.Appearance.BackColor = Color.LightGreen;
+                //e.Appearance.ForeColor = Color.White;
+                e.HighPriority = true;
+            }
+        }
+
+        private void grvExcelList_RowStyle(object sender, RowStyleEventArgs e)
+        {
+            if (e.RowHandle < 0)
+                return;
+
+            GridView view = sender as GridView;
+
+            string name = (string)view.GetRowCellValue(e.RowHandle, "Name");
+            string surname = (string)view.GetRowCellValue(e.RowHandle, "Surname");
+
+            if (imageInfo.Detail.Any(c => c.Name == name && c.Surname == surname))
+            {
+                e.Appearance.BackColor = Color.LightGreen;
+                //e.Appearance.ForeColor = Color.White;
+                e.HighPriority = true;
+            }
+        }
+
+        private void grvImageReadList_CellValueChanging(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
+        {
+        }
+
+
     }
 }

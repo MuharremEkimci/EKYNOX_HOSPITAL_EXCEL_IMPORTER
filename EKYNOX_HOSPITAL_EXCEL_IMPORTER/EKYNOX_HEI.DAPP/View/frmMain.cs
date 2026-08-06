@@ -144,12 +144,26 @@ namespace EKYNOX_HEI.DAPP.View
 
         private void btnEducationAttendandce_ItemClick(object sender, ItemClickEventArgs e)
         {
+            var data = context.Institutions.ToList();
+            if (!data.Any())
+            {
+                MessageBox.Show("Kurum tanımlaması yapılmalıdır.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                this.Hide();
+                return;
+            }
+
             var frm = serviceProvider.GetRequiredService<frmEducationAttendanceList>();
             OpenForm(frm);
         }
 
         private void barButtonItem1_ItemClick_1(object sender, ItemClickEventArgs e)
         {
+            if (userInfo.Role == CORE.Enums.RoleEnum.User)
+            {
+                MessageBox.Show("Giriş yetkiniz bulunmamaktadır.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
             var frm = serviceProvider.GetRequiredService<frmAISettingList>();
             OpenForm(frm);
         }
