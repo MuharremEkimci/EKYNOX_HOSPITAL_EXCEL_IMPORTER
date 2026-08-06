@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraEditors;
+﻿using DevExpress.Dialogs.Core.View;
+using DevExpress.XtraEditors;
 using EKYNOX_HEI.CORE.Helpers;
 using EKYNOX_HEI.CORE.Models.AISetting;
 using EKYNOX_HEI.CORE.Models.EducationAttendance;
@@ -9,7 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -107,6 +110,75 @@ namespace EKYNOX_HEI.DAPP.View
                     DataRefresh();
                 }
             }
+
+            if (e.Item.Name == "bbtnExcelDownload")
+            {
+                var row = grvList.GetRow(grvList.FocusedRowHandle) as EducationAttendanceListViewModel;
+
+                if (row is not null)
+                {
+                    var data = educationAttendaceService.GetData(row.LogicalRef).Data;
+                    if (data.ExcelData is null)
+                    {
+                        MessageBox.Show("Excel verisi bulunamadı", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
+
+                    using (SaveFileDialog dialog = new SaveFileDialog())
+                    {
+                        dialog.Filter = "Excel Dosyası (*.xlsx)|*.xlsx";
+                        dialog.FileName = "Rapor.xlsx";
+                        dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+                        if (dialog.ShowDialog() == DialogResult.OK)
+                        {
+                            File.WriteAllBytes(dialog.FileName, data.ExcelData);
+
+                            if (MessageBox.Show("Dosya kaydedildi. Açmak ister misiniz ?", "Uyarı", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                            {
+                                Process.Start(new ProcessStartInfo
+                                {
+                                    FileName = dialog.FileName,
+                                    UseShellExecute = true
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (e.Item.Name == "bbtnShowExcel")
+            {
+                var row = grvList.GetRow(grvList.FocusedRowHandle) as EducationAttendanceListViewModel;
+                if (row is not null)
+                {
+                    var data = educationAttendaceService.GetData(row.LogicalRef).Data;
+                    if (data.ExcelData is null)
+                    {
+                        MessageBox.Show("Excel verisi bulunamadı", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
+
+                    try
+                    {
+                        var file = Path.Combine(Path.GetTempPath(), $@"Rapor_{Guid.NewGuid()}.xlsx");
+
+                        File.WriteAllBytes(file, data.ExcelData);
+
+                        Process.Start(new ProcessStartInfo
+                        {
+                            FileName = file,
+                            UseShellExecute = true
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Excel verisi açılırken hata oluştu.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        AppLogger.Error(DateTime.Now, nameof(frmEducationAttendanceList), "bbtnShowExcel", nameof(educationAttendaceService.GetData), ex.Message);
+                    }
+
+                }
+            }
         }
 
         private void grdList_MouseEnter(object sender, EventArgs e)
@@ -120,6 +192,11 @@ namespace EKYNOX_HEI.DAPP.View
             {
                 pmGrid.ShowPopup(MousePosition);
             }
+        }
+
+        private void frmEducationAttendanceList_Load(object sender, EventArgs e)
+        {
+            DataRefresh();
         }
     }
 }

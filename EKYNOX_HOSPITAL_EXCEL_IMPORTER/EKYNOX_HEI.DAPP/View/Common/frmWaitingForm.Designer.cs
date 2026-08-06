@@ -48,7 +48,6 @@
             mainProgPanel.Location = new Point(0, 17);
             mainProgPanel.Margin = new Padding(0, 3, 0, 3);
             mainProgPanel.Name = "mainProgPanel";
-            mainProgPanel.ShowDescription = false;
             mainProgPanel.Size = new Size(246, 39);
             mainProgPanel.TabIndex = 0;
             mainProgPanel.Text = "progressPanel1";

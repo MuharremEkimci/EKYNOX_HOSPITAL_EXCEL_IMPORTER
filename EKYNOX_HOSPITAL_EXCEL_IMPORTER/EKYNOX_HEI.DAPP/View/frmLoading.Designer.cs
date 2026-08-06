@@ -89,6 +89,7 @@
             Controls.Add(labelStatus);
             Controls.Add(labelCopyright);
             Controls.Add(progressBarControl);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmLoading";
             Padding = new Padding(1);
             StartPosition = FormStartPosition.CenterParent;

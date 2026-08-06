@@ -221,6 +221,7 @@
             ClientSize = new Size(468, 212);
             Controls.Add(layoutControl1);
             FormBorderStyle = FormBorderStyle.None;
+            IconOptions.Image = (Image)resources.GetObject("frmLogin.IconOptions.Image");
             KeyPreview = true;
             Name = "frmLogin";
             StartPosition = FormStartPosition.CenterParent;
