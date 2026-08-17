@@ -1,4 +1,4 @@
-AI Destekli Eğitim Katılım Formu Dijitalleştirme Sistemi
+# AI Destekli Eğitim Katılım Formu Dijitalleştirme Sistemi
 
 Proje Özeti:
 Bu proje, hastanelerde gerçekleştirilen eğitimlerde kullanılan fiziksel katılım formlarındaki el yazısı ad-soyad verilerini yapay zeka destekli görsel analiz ile okuyarak Excel raporlarına otomatik aktarmak amacıyla geliştirilmiş bir Windows masaüstü uygulamasıdır.
