@@ -23,3 +23,20 @@ Temel Özellikler:
 - Manuel düzeltme desteği
 - EPPlus ile Excel şablonlarına veri yazma
 - Daha önce kayıtlı kişilerin tekrar eklenmesini engelleyen kontrol mantığı
+
+<img width="552" height="447" alt="LoginHazırlık2" src="https://github.com/user-attachments/assets/fede5543-6ef4-4138-a43e-a965e1b81126" />
+<img width="551" height="267" alt="Login1" src="https://github.com/user-attachments/assets/976726f7-e2cb-459c-947e-0654dcb46d18" />
+<img width="402" height="735" alt="Kullanıcılar3" src="https://github.com/user-attachments/assets/a59c1ff2-052d-4b16-89fd-8d678e90d779" />
+<img width="1919" height="1033" alt="AISettingView4" src="https://github.com/user-attachments/assets/80ef145d-a9f9-4f54-8271-83f77930e6f3" />
+<img width="428" height="732" alt="Kurumlar5" src="https://github.com/user-attachments/assets/e0324dc2-c6ed-4950-8394-d56479337130" />
+<img width="1918" height="1028" alt="Eğitim katılım listesi6" src="https://github.com/user-attachments/assets/638f125a-5389-4cfb-af1b-3e629d16d2c9" />
+<img width="1919" height="1032" alt="Eğitim Katılım Form7" src="https://github.com/user-attachments/assets/ab236a93-517f-40e0-83ee-469bede72a2d" />
+<img width="1919" height="1029" alt="Doğrulama Ekranı8" src="https://github.com/user-attachments/assets/04a4d83e-6688-47cb-9977-298c9d6f53b5" />
+<img width="526" height="541" alt="chatbotekranı9" src="https://github.com/user-attachments/assets/a2f30eed-c028-4b4a-a8e4-2beed6fdd79c" />
+
+
+
+
+
+
+
